@@ -8,4 +8,119 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-dark-bg: #0b0d0f;
+    --color-darker-bg: #080a0c;
+    --color-light-text: #f0f0f0;
+    --color-accent-green: #00bf8f;
+    --color-accent-blue: #00a3ff;
+    --color-card-bg: #14171a;
+    --color-border: #2a2f35;
+}
+
+/* Custom Dark Theme Styles for MOVR */
+body {
+  background-color: var(--color-dark-bg);
+  color: var(--color-light-text);
+}
+
+/* Custom styles for MOVR theme */
+.bg-dark {
+  background-color: var(--color-dark-bg);
+}
+
+.bg-darker {
+  background-color: var(--color-darker-bg);
+}
+
+.text-light {
+  color: var(--color-light-text);
+}
+
+.text-accent-green {
+  color: var(--color-accent-green);
+}
+
+.text-accent-blue {
+  color: var(--color-accent-blue);
+}
+
+.bg-accent-green {
+  background-color: var(--color-accent-green);
+}
+
+.bg-accent-blue {
+  background-color: var(--color-accent-blue);
+}
+
+.card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover animations */
+.lift-effect {
+  transition: all 0.3s ease-in-out;
+}
+
+.lift-effect:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.btn-scale {
+  transition: transform 0.15s;
+}
+
+.btn-scale:active {
+  transform: scale(0.95);
+}
+
+/* Navbar active state */
+.nav-active {
+  border-bottom: 2px solid var(--color-accent-green);
+}
+
+/* Product card specific styles */
+.product-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Admin dashboard specific styles */
+.admin-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading spinner */
+.spinner {
+  border-top-color: var(--color-accent-green);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Rating stars */
+.rating-star {
+  color: #d1d5db; /* gray-300 */
+}
+
+.rating-star.active {
+  color: #fbbf24; /* yellow-400 */
 }

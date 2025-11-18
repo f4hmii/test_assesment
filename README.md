@@ -1,59 +1,183 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MOVR - E-commerce Sporty
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+MOVR adalah platform e-commerce sporty dengan tema gelap modern yang dibangun menggunakan Laravel. Platform ini dirancang untuk menyediakan pengalaman belanja yang sporty dan modern dengan antarmuka yang user-friendly dan fungsionalitas yang lengkap.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### User Role
+- **Admin** (juga bertindak sebagai penjual)
+- **Customer** (role default untuk registrasi)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Fungsionalitas Customer
+- Registrasi dan login
+- Browse produk
+- Detail produk dengan ulasan
+- Add to cart
+- Shopping cart management
+- Checkout sederhana
+- Manajemen profil
+- Manajemen alamat (bisa memiliki alamat banyak)
+- Favorit produk
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Fungsionalitas Admin
+- CRUD produk
+- Dashboard admin
+- Manajemen pembayaran
 
-## Learning Laravel
+## Teknologi yang Digunakan
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- Laravel 12
+- TailwindCSS
+- MySQL
+- PHP 8.2+
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalasi
 
-## Laravel Sponsors
+1. **Clone repository atau buka project folder**
+```bash
+cd testaassesment2
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. **Install dependencies**
+```bash
+composer install
+npm install
+```
 
-### Premium Partners
+3. **Setup environment**
+```bash
+cp .env.example .env
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+4. **Generate application key**
+```bash
+php artisan key:generate
+```
 
-## Contributing
+5. **Setup database**
+- Buat database baru di MySQL
+- Update `.env` dengan konfigurasi database Anda:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database_anda
+DB_USERNAME=nama_user
+DB_PASSWORD=password
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. **Run migrations and seeders**
+```bash
+php artisan migrate --seed
+```
 
-## Code of Conduct
+7. **Setup storage link**
+```bash
+php artisan storage:link
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+8. **Start development server**
+```bash
+php artisan serve
+```
 
-## Security Vulnerabilities
+## Struktur Database (Indonesian Naming)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Tabel Utama
+- `users` - Tabel pengguna dengan kolom tambahan `role`
+- `produk` - Produk dengan kolom: id, penjual_id, nama_produk, slug, deskripsi, harga, stok, gambar, kategori, timestamps
+- `alamat` - Alamat pelanggan: id, pembeli_id, label, provinsi, kota, kecamatan, detail_alamat, kode_pos, is_default, timestamps
+- `keranjang_items` - Item keranjang: id, pembeli_id, produk_id, jumlah, harga_saat_ini, timestamps
+- `ulasan` - Ulasan produk: id, produk_id, pembeli_id, rating, komentar, timestamps
+- `favorit` - Produk favorit: id, pembeli_id, produk_id, timestamps
+- `pembayaran` - Data pembayaran: id, pembeli_id, total, status, metode, detail_json, timestamps
+
+## Konfigurasi Seeder
+
+Seeder akan otomatis membuat:
+- 1 user admin dengan email `admin@movr.com` dan password `password123`
+- Beberapa produk contoh
+
+## Route yang Tersedia
+
+### Guest Routes
+- `/` - Home page
+- `/produk` - Daftar produk
+- `/produk/{slug}` - Detail produk
+- `/login` - Login page
+- `/register` - Register page
+
+### Authenticated Routes
+- `/profil` - Profil user dan manajemen alamat
+- `/keranjang` - Shopping cart
+- `/checkout` - Proses checkout
+- `/favorit` - Produk favorit
+
+### Admin Routes (middleware: role:admin)
+- `/admin/dashboard` - Dashboard admin
+- `/admin/produk` - CRUD produk
+
+## Struktur Proyek (Indonesian Naming)
+
+### Controller
+- `AuthController` - Otentikasi
+- `HalamanUtamaController` - Home page
+- `ProdukController` - Produk (customer)
+- `AdminProdukController` - Produk (admin)
+- `KeranjangController` - Shopping cart
+- `CheckoutController` - Checkout
+- `ProfilPembeliController` - Profil management
+- `UlasanController` - Ulasan produk
+- `FavoritController` - Produk favorit
+
+### Model
+- `Pengguna` - User model
+- `Produk` - Produk model
+- `Alamat` - Alamat model
+- `KeranjangItem` - Keranjang item model
+- `Ulasan` - Ulasan model
+- `Favorit` - Favorit model
+- `Pembayaran` - Pembayaran model
+
+## Desain UI/UX
+
+### Tema Warna
+- Background gelap: `#0b0d0f`
+- Accent green: `#00bf8f`
+- Accent blue: `#00a3ff`
+- Card background: `#14171a`
+- Border: `#2a2f35`
+- Text: `#f0f0f0`
+
+### Animasi
+- Hover card effect: `lift effect` (translateY -4px + shadow)
+- Button active scale: `scale 0.98`
+- Active navbar underline animation
+
+### Font
+- Font sans-serif modern yang bold untuk tipografi
+
+## Testing
+
+Untuk menjalankan test:
+```bash
+php artisan test
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[MIT License](LICENSE)
+
+## Catatan Pengembangan
+
+- Semua model, controller, migration, variabel, dan route name menggunakan penamaan Bahasa Indonesia
+- Menghindari relasi many-to-many, gunakan one-to-many atau pivot model eksplisit
+- Validasi server-side menggunakan Form Request (belum sepenuhnya diimplementasikan dalam versi ini)
+- Password dihash menggunakan Hash::make()
+- Middleware role:admin untuk proteksi route admin
+- Admin tidak bisa register, hanya dibuat via seeder
+- Registration otomatis assign role="pembeli"
+
+## Penulis
+
+Dibuat sebagai proyek Laravel e-commerce sporty dengan tema gelap.
