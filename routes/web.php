@@ -52,13 +52,21 @@ Route::middleware('auth')->group(function () {
     Route::put('/profil', [ProfilPembeliController::class, 'update'])->name('profil.update');
     Route::post('/profil/password', [ProfilPembeliController::class, 'updatePassword'])->name('profil.password.update');
 
+    // Alamat routes
+    Route::post('/profil/alamat', [ProfilPembeliController::class, 'storeAlamat'])->name('profil.alamat.store');
+    Route::put('/profil/alamat/{id}', [ProfilPembeliController::class, 'updateAlamat'])->name('profil.alamat.update');
+    Route::delete('/profil/alamat/{id}', [ProfilPembeliController::class, 'destroyAlamat'])->name('profil.alamat.destroy');
+    Route::get('/profil/alamat/{id}', [ProfilPembeliController::class, 'edit'])->name('profil.alamat.edit');
+
 
     // Ulasan routes
     Route::post('/ulasan', [UlasanController::class, 'store'])->name('ulasan.store');
 
+    
     // Favorit routes
     Route::get('/favorit', [FavoritController::class, 'index'])->name('favorit.index');
     Route::post('/favorit/toggle', [FavoritController::class, 'toggle'])->name('favorit.toggle');
+    
 });
 
 // Admin routes

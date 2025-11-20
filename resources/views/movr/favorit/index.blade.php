@@ -5,6 +5,7 @@
 <section class="py-6 bg-darker-bg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-bold text-light-text">Produk Favorit</h1>
+        <p class="text-gray-400">{{ $favorit->total() }} produk favorit</p>
     </div>
 </section>
 
@@ -14,7 +15,7 @@
         @if($favorit->count() > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @foreach($favorit as $item)
-                    <div class="product-card lift-effect">
+                    <div class="product-card lift-effect" data-product-id="{{ $item->produk->id }}">
                         <div class="p-4">
                             <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-card-bg">
                                 @if($item->produk->gambar)
@@ -39,7 +40,7 @@
                                             <i class="fas fa-shopping-cart mr-2"></i>Tambahkan
                                         </button>
                                     </form>
-                                    <button type="button" class="w-full bg-dark-bg border border-border-color text-light-text py-2 rounded-lg hover:bg-card-bg transition btn-scale remove-favorite" data-id="{{ $item->produk->id }}">
+                                    <button type="button" class="p-2 border border-border-color rounded-lg text-light-text hover:text-accent-green transition remove-favorite" data-id="{{ $item->produk->id }}" title="Hapus dari favorit">
                                         <i class="fas fa-heart text-red-500"></i>
                                     </button>
                                 </div>
@@ -71,33 +72,101 @@
 </section>
 
 <script>
+function toggleFavorite(productId) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    fetch('{{ route('favorit.toggle') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+            produk_id: productId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status === 'removed') {
+            showNotification('✓ Produk berhasil dihapus dari favorit', 'success');
+            // Remove card dari UI
+            const card = document.querySelector(`[data-product-id="${productId}"]`);
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            } else {
+                location.reload();
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('✗ Terjadi kesalahan', 'error');
+    });
+}
+
+function showNotification(message, type = 'info') {
+    const bgColor = {
+        'success': 'bg-accent-green',
+        'info': 'bg-blue-500',
+        'error': 'bg-red-500'
+    }[type] || 'bg-blue-500';
+
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50`;
+    notification.textContent = message;
+    notification.style.animation = 'fadeIn 0.3s ease-in';
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Handle remove from favorites
     const removeButtons = document.querySelectorAll('.remove-favorite');
+    
     removeButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
             const productId = this.getAttribute('data-id');
             
-            fetch('{{ route('favorit.toggle') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    produk_id: productId
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.status === 'removed') {
-                    // Reload the page to update the favorites list
-                    location.reload();
-                }
-            })
-            .catch(error => console.error('Error:', error));
+            if (!confirm('Yakin ingin menghapus produk ini dari favorit?')) {
+                return;
+            }
+            
+            toggleFavorite(productId);
         });
     });
 });
 </script>
+
+<style>
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+</style>
 @endsection

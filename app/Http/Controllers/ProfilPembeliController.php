@@ -78,26 +78,41 @@ class ProfilPembeliController extends Controller
 
         $pembeli_id = auth()->id();
 
-        // If this is set as default, update other addresses to not be default
-        if ($request->is_default) {
-            Alamat::where('pembeli_id', $pembeli_id)->update(['is_default' => false]);
-        } elseif (Alamat::where('pembeli_id', $pembeli_id)->count() === 0) {
-            // If this is the first address, make it default
-            $request->merge(['is_default' => true]);
-        }
+    // Convert checkbox "on" into integer 1/0
+    // $is_default = $request->has('is_default') ? 1 : 0;
+    $is_default = $request->boolean('is_default') ? 1 : 0;
 
-        Alamat::create([
-            'pembeli_id' => $pembeli_id,
-            'label' => $request->label,
-            'provinsi' => $request->provinsi,
-            'kota' => $request->kota,
-            'kecamatan' => $request->kecamatan,
-            'detail_alamat' => $request->detail_alamat,
-            'kode_pos' => $request->kode_pos,
-            'is_default' => $request->is_default ?? false,
-        ]);
+    $jumlahAlamat = Alamat::where('pembeli_id', $pembeli_id)->count();
+    // dd("Jumlah alamat: " . $jumlahAlamat);
+    // Jika alamat pertama → otomatis default
+    if ($jumlahAlamat === 0) {
+        $is_default = 1;
+    }
 
-        return redirect()->route('profil.index')->with('status', 'Alamat berhasil ditambahkan!');
+    // Jika alamat baru diset default → reset yang lain
+    // if ($is_default === 1) {
+    //     Alamat::where('pembeli_id', $pembeli_id)->update(['is_default' => 0]);
+    // }
+
+    Alamat::create([
+        'pembeli_id' => $pembeli_id,
+        'label' => $request->label,
+        'provinsi' => $request->provinsi,
+        'kota' => $request->kota,
+        'kecamatan' => $request->kecamatan,
+        'detail_alamat' => $request->detail_alamat,
+        'kode_pos' => $request->kode_pos,
+        'is_default' => $is_default,
+    ]);
+
+    return redirect()->route('profil.index')->with('status', 'Alamat berhasil ditambahkan!');
+
+    }
+    // GET EXITING ADDRESS FOR EDITING
+    public function edit($id)
+    {
+        $alamat = Alamat::findOrFail($id);
+        return response()->json($alamat);
     }
 
     /**
@@ -117,19 +132,22 @@ class ProfilPembeliController extends Controller
         ]);
 
         // If this is set as default, update other addresses to not be default
-        if ($request->is_default) {
-            Alamat::where('pembeli_id', auth()->id())->update(['is_default' => false]);
+        if ($request->boolean('is_default')) {
+        // Reset semua alamat lain
+        Alamat::where('pembeli_id', auth()->id())
+            ->update(['is_default' => false]);
+
+            $alamat->is_default = true;
         }
 
-        $alamat->update([
-            'label' => $request->label,
-            'provinsi' => $request->provinsi,
-            'kota' => $request->kota,
-            'kecamatan' => $request->kecamatan,
-            'detail_alamat' => $request->detail_alamat,
-            'kode_pos' => $request->kode_pos,
-            'is_default' => $request->is_default ?? false,
-        ]);
+        $alamat->label = $request->label;
+        $alamat->provinsi = $request->provinsi;
+        $alamat->kota = $request->kota;
+        $alamat->kecamatan = $request->kecamatan;
+        $alamat->detail_alamat = $request->detail_alamat;
+        $alamat->kode_pos = $request->kode_pos;
+
+        $alamat->save();;
 
         return redirect()->route('profil.index')->with('status', 'Alamat berhasil diperbarui!');
     }
