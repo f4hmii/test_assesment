@@ -2,39 +2,38 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="bg-gradient-to-r from-darker-bg to-dark-bg py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 class="text-5xl font-bold text-light-text mb-4">Tingkatkan Performa <span class="text-accent-green">Mu</span></h1>
-                <p class="text-xl text-gray-300 mb-8">Temukan koleksi terbaru dari produk sporty premium yang didesain untuk gaya hidup aktif dan performa maksimal.</p>
-                <div class="flex space-x-4">
-                    <a href="{{ route('produk.index') }}" class="bg-accent-green text-dark-bg px-8 py-3 rounded-full font-semibold hover:bg-opacity-90 transition transform hover:-translate-y-1">Belanja Sekarang</a>
-                    <a href="#featured-products" class="border border-accent-green text-accent-green px-8 py-3 rounded-full font-semibold hover:bg-accent-green hover:text-dark-bg transition">Lihat Produk</a>
-                </div>
-            </div>
-            <div class="md:w-1/2 flex justify-center">
-                <div class="relative">
-                    <div class="w-80 h-80 bg-gradient-to-br from-accent-green to-accent-blue rounded-full flex items-center justify-center">
-                        <div class="w-64 h-64 bg-dark-bg rounded-full flex items-center justify-center">
-                            <i class="fas fa-running text-accent-green text-8xl"></i>
-                        </div>
-                    </div>
-                    <div class="absolute -bottom-4 -right-4 bg-card-bg border border-border-color rounded-xl p-4 shadow-xl">
-                        <p class="text-accent-green font-bold">Kualitas Premium</p>
-                        <p class="text-light-text text-sm">Teruji & Terpercaya</p>
-                    </div>
-                </div>
+<section 
+    class="relative h-[600px] bg-cover bg-center"
+    style="background-image: url('https://i.pinimg.com/1200x/a8/95/43/a8954340e5e4c8f99f4f984405449363.jpg');"
+>
+
+    <!-- Overlay transparan memenuhi hero -->
+    <div class="absolute inset-0 bg-dark-bg/50"></div>
+
+    <!-- Konten -->
+    <div class="relative max-w-9xl mx-auto h-full flex items-center px-4 sm:px-6 lg:px-8">
+        <div class="md:w-7xl bg-dark-bg/50  p-9 rounded-l">
+            <h1 class="text-5xl font-bold text-light-text mb-4">
+                Tingkatkan Performa <span class="text-accent-green">Mu</span>
+            </h1>
+            <p class="text-xl text-gray-300 mb-8">
+                Temukan koleksi terbaru dari produk sporty premium yang didesain untuk gaya hidup aktif dan performa maksimal.
+            </p>
+            <div class="flex space-x-4">
+                <a href="{{ route('produk.index') }}" class="bg-accent-green text-dark-bg px-8 py-3 rounded-full font-semibold hover:bg-opacity-90 transition transform hover:-translate-y-1">Belanja Sekarang</a>
+                <a href="#featured-products" class="border border-accent-green text-accent-green px-8 py-3 rounded-full font-semibold hover:bg-accent-green hover:text-dark-bg transition">Lihat Produk</a>
             </div>
         </div>
     </div>
+
 </section>
+
 
 <!-- Featured Products -->
 <section id="featured-products" class="py-16 bg-dark-bg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-light-text mb-4">Produk Unggulan</h2>
+            <h2 class="text-3xl font-bold text-light-text mb-4">Produk Kami</h2>
             <p class="text-gray-400 max-w-2xl mx-auto">Temukan produk-produk terbaik yang paling banyak diminati oleh pelanggan kami.</p>
         </div>
         
@@ -53,7 +52,7 @@
                                 @endif
                             </div>
                             <div class="mt-4">
-                                <h3 class="text-lg font-medium text-light-text">{{ $item->nama_produk }}</h3>
+                                <h3 class="text-lg font-medium text-black">{{ $item->nama_produk }}</h3>
                                 <p class="mt-1 text-sm text-gray-400">{{ $item->kategori }}</p>
                                 <p class="mt-2 text-xl font-bold text-accent-green">Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
                                 
@@ -63,12 +62,17 @@
                                         <input type="hidden" name="produk_id" value="{{ $item->id }}">
                                         <input type="hidden" name="jumlah" value="1">
                                         <button type="submit" class="w-full bg-accent-green text-dark-bg py-2 rounded-lg hover:bg-opacity-90 transition btn-scale">
-                                            <i class="fas fa-shopping-cart mr-2"></i>Tambahkan
+                                            <i class="fas fa-shopping-cart mr-2 p-4"></i>
                                         </button>
                                     </form>
-                                    <a href="{{ route('produk.show', $item->slug) }}" class="w-full bg-dark-bg border border-border-color text-light-text py-2 rounded-lg text-center hover:bg-card-bg transition btn-scale">
-                                        <i class="fas fa-eye mr-2"></i>Detail
-                                    </a>
+                                   <a href="{{ route('produk.show', $item->slug) }}" 
+   class="w-full bg-dark-bg border border-border-color text-light-text py-2 rounded-lg 
+          hover:bg-card-bg transition btn-scale 
+          flex items-center justify-center">
+    <i class="fas fa-eye mr-2"></i>
+    Detail
+</a>
+
                                 </div>
                             </div>
                         </div>

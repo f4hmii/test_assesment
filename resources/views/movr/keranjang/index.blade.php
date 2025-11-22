@@ -85,7 +85,7 @@
                     <div class="bg-card-bg border border-border-color rounded-lg p-6">
                         <h2 class="text-lg font-bold text-light-text mb-4">Ringkasan Pesanan</h2>
                         
-                        <div class="space-y-4">
+                        <div class="space-y-4 p-9">
                             <div class="flex justify-between">
                                 <span class="text-light-text">Subtotal</span>
                                 <span class="text-light-text">Rp {{ number_format($total, 0, ',', '.') }}</span>
@@ -106,7 +106,7 @@
                             </div>
                         </div>
                         
-                        <a href="{{ route('checkout.index') }}" class="w-full mt-6 bg-accent-green text-dark-bg py-3 px-4 rounded-lg text-center font-medium hover:bg-opacity-90 transition btn-scale">
+                        <a href="index" class="w-full mt-6 bg-accent-green text-dark-bg py-3 px-4 rounded-lg text-center font-medium hover:bg-opacity-90 transition btn-scale">
                             <i class="fas fa-shopping-bag mr-2"></i>Lanjut ke Checkout
                         </a>
                     </div>

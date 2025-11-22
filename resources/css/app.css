@@ -8,9 +8,10 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    --color-dark-bg: #0b0d0f;
+    --color-dark-bg: #14171a;
     --color-darker-bg: #080a0c;
-    --color-light-text: #f0f0f0;
+    --color-light-text: #0b0d0f;
+    --color-dark-text: #14171a;
     --color-accent-green: #00bf8f;
     --color-accent-blue: #00a3ff;
     --color-card-bg: #14171a;

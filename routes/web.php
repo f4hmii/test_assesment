@@ -11,16 +11,6 @@ use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\FavoritController;
 use App\Http\Controllers\AdminProdukController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 // Guest routes
 Route::get('/', [HalamanUtamaController::class, 'index'])->name('home');
@@ -43,9 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/keranjang/{id}', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
 
     // Checkout routes
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/checkout/{id}', [CheckoutController::class, 'show'])->name('pembayaran.show');
+
+
 
     // Profil routes
     Route::get('/profil', [ProfilPembeliController::class, 'index'])->name('profil.index');

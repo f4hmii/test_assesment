@@ -78,7 +78,7 @@
                                         @endif
                                     </div>
                                     <div class="mt-4">
-                                        <h3 class="text-lg font-medium text-light-text">{{ $item->nama_produk }}</h3>
+                                        <h3 class="text-lg font-medium text-black">{{ $item->nama_produk }}</h3>
                                         <p class="mt-1 text-sm text-gray-400">{{ $item->kategori }}</p>
                                         <p class="mt-2 text-xl font-bold text-accent-green">Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
                                         
