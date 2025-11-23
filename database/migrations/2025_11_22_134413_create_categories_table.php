@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up()
     {
-        
-        if (!Schema::hasColumn('users', 'role')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->enum('role', ['admin', 'pembeli'])->default('pembeli');
-            });
-        }
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique(); // Untuk URL yang cantik (misal: baju-lari)
+            $table->timestamps();
+        });
     }
 
     /**
@@ -24,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
-        });
+        Schema::dropIfExists('categories');
     }
 };

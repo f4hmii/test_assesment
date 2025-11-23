@@ -124,6 +124,11 @@
                         <i class="fas fa-list text-accent-green text-3xl mb-3"></i>
                         <p class="font-medium text-light-text">Daftar Produk</p>
                     </a>
+            
+                    <a href="{{ route('admin.kategori.index') }}" class="bg-dark-bg border border-border-color rounded-lg p-6 text-center hover:bg-card-bg transition lift-effect">
+                        <i class="fas fa-tags text-accent-green text-3xl mb-3"></i>
+                        <p class="font-medium text-light-text">Kelola Kategori</p>
+                    </a>
                     
                     <a href="#" class="bg-dark-bg border border-border-color rounded-lg p-6 text-center hover:bg-card-bg transition lift-effect">
                         <i class="fas fa-file-invoice text-accent-green text-3xl mb-3"></i>

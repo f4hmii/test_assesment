@@ -2,122 +2,93 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
+use App\Models\Product;
+use App\Models\Category; // Wajib import
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AdminProdukController extends Controller
 {
-    /**
-     * Display a listing of the products
-     */
     public function index()
     {
-        $produk = Produk::with('penjual')->paginate(10);
-        return view('movr.admin.produk.index', compact('produk'));
+        $products = Product::with('category')->latest()->get();
+        return view('movr.admin.produk.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new product
-     */
     public function create()
     {
-        return view('movr.admin.produk.create');
+        // Kirim data kategori ke form tambah produk
+        $categories = Category::all();
+        return view('movr.admin.produk.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created product in storage
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'nama_produk' => 'required|string|max:255',
-            'deskripsi' => 'required',
-            'harga' => 'required|numeric|min:0',
-            'stok' => 'required|integer|min:0',
-            'kategori' => 'required|string|max:100',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'category_id' => 'required|exists:categories,id', // Validasi kategori
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $gambarPath = null;
-        if ($request->hasFile('gambar')) {
-            $gambarPath = $request->file('gambar')->store('produk', 'public');
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
         }
 
-        Produk::create([
-            'penjual_id' => auth()->id(),
-            'nama_produk' => $request->nama_produk,
-            'slug' => Str::slug($request->nama_produk) . '-' . time(),
-            'deskripsi' => $request->deskripsi,
-            'harga' => $request->harga,
-            'stok' => $request->stok,
-            'kategori' => $request->kategori,
-            'gambar' => $gambarPath,
+        Product::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'category_id' => $request->category_id, // Simpan ID Kategori
+            'image' => $imagePath,
         ]);
 
-        return redirect()->route('admin.produk.index')->with('status', 'Produk berhasil ditambahkan!');
+        return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan!');
     }
 
-    /**
-     * Show the form for editing the specified product
-     */
     public function edit($id)
     {
-        $produk = Produk::findOrFail($id);
-        return view('movr.admin.produk.edit', compact('produk'));
+        $product = Product::findOrFail($id);
+        $categories = Category::all(); // Kirim kategori untuk dropdown edit
+        return view('movr.admin.produk.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update the specified product in storage
-     */
     public function update(Request $request, $id)
     {
-        $produk = Produk::findOrFail($id);
-
         $request->validate([
-            'nama_produk' => 'required|string|max:255',
-            'deskripsi' => 'required',
-            'harga' => 'required|numeric|min:0',
-            'stok' => 'required|integer|min:0',
-            'kategori' => 'required|string|max:100',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $gambarPath = $produk->gambar;
-        if ($request->hasFile('gambar')) {
-            // Delete old image if exists
-            if ($gambarPath) {
-                \Storage::disk('public')->delete($gambarPath);
-            }
-            $gambarPath = $request->file('gambar')->store('produk', 'public');
+        $product = Product::findOrFail($id);
+        
+        $data = $request->except(['image', '_token', '_method']);
+
+        if ($request->hasFile('image')) {
+            if ($product->image) Storage::disk('public')->delete($product->image);
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        $produk->update([
-            'nama_produk' => $request->nama_produk,
-            'deskripsi' => $request->deskripsi,
-            'harga' => $request->harga,
-            'stok' => $request->stok,
-            'kategori' => $request->kategori,
-            'gambar' => $gambarPath,
-        ]);
+        $product->update($data);
 
-        return redirect()->route('admin.produk.index')->with('status', 'Produk berhasil diperbarui!');
+        return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diupdate!');
     }
 
-    /**
-     * Remove the specified product from storage
-     */
     public function destroy($id)
     {
-        $produk = Produk::findOrFail($id);
+        $product = Product::findOrFail($id);
+        if ($product->image) Storage::disk('public')->delete($product->image);
+        $product->delete();
         
-        // Delete image if exists
-        if ($produk->gambar) {
-            \Storage::disk('public')->delete($produk->gambar);
-        }
-        
-        $produk->delete();
-
-        return redirect()->route('admin.produk.index')->with('status', 'Produk berhasil dihapus!');
+        // Redirect kembali (bisa menghandle jika dihapus dari halaman kategori)
+        return back()->with('success', 'Produk berhasil dihapus!');
     }
 }

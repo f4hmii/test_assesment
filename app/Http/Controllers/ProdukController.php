@@ -2,29 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
-use App\Models\Ulasan;
+use App\Models\Product; // Gunakan Model Product (Baru)
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProdukController extends Controller
 {
     /**
-     * Display a listing of the products
+     * Menampilkan daftar semua produk
      */
-    public function index()
+    public function index(Request $request)
     {
-        $produk = Produk::with(['penjual', 'ulasan'])->paginate(12);
-        return view('movr.produk.index', compact('produk'));
+        // Mulai Query dari tabel products
+        $query = Product::with('category');
+
+        // Logika Filter Kategori (Jika ada request kategori)
+        if ($request->has('kategori') && $request->kategori != '') {
+            $slug = $request->kategori;
+            $query->whereHas('category', function($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+        }
+
+        // Ambil data dengan pagination (9 produk per halaman)
+        // Kita namakan variabelnya '$products' (Inggris)
+        $products = $query->latest()->paginate(9);
+
+        // Ambil semua kategori untuk sidebar filter
+        $categories = Category::all();
+
+        return view('movr.produk.index', compact('products', 'categories'));
     }
 
     /**
-     * Display the specified product
+     * Menampilkan detail 1 produk
      */
-    public function show($slug)
+    public function show($id)
     {
-        $produk = Produk::where('slug', $slug)->with(['penjual', 'ulasan.pembeli'])->firstOrFail();
-        $ulasan = $produk->ulasan()->with('pembeli')->paginate(5);
-        
-        return view('movr.produk.show', compact('produk', 'ulasan'));
+        // Cari produk berdasarkan ID
+        $product = Product::findOrFail($id);
+
+        // Tampilkan view detail
+        return view('movr.produk.show', compact('product'));
     }
 }

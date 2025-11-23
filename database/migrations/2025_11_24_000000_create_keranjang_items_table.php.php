@@ -6,24 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('keranjang_items', function (Blueprint $table) {
             $table->id();
+            // Tetap gunakan pembeli_id tapi hubungkan ke users
             $table->foreignId('pembeli_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('produk_id')->constrained('produk')->onDelete('cascade');
+            
+            // PERBAIKAN: Hubungkan ke tabel 'products' (bukan 'produk')
+            $table->foreignId('produk_id')->constrained('products')->onDelete('cascade');
+            
             $table->integer('jumlah')->default(1);
-            $table->decimal('harga_saat_ini', 10, 2);
+            $table->decimal('harga_saat_ini', 12, 0); // Sesuaikan presisi harga
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('keranjang_items');

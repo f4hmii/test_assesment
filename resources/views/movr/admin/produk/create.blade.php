@@ -1,93 +1,63 @@
 @extends('movr.layouts.app')
 
 @section('content')
-<!-- Admin Products Create Header -->
-<section class="py-6 bg-darker-bg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center">
+<section class="py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-2xl font-bold text-light-text">Tambah Produk Baru</h1>
                 <p class="text-gray-400">Tambahkan produk baru untuk dijual</p>
             </div>
-            <a href="{{ route('admin.produk.index') }}" class="text-accent-green hover:underline">
-                <i class="fas fa-arrow-left mr-2"></i>Kembali ke Daftar
-            </a>
+            <a href="{{ route('admin.produk.index') }}" class="text-accent-green hover:underline">&larr; Kembali ke Daftar</a>
         </div>
-    </div>
-</section>
 
-<!-- Admin Products Create Content -->
-<section class="py-8">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-card-bg border border-border-color rounded-lg p-6">
-            <form method="POST" action="{{ route('admin.produk.store') }}" enctype="multipart/form-data">
+        <div class="bg-card-bg border border-border-color rounded-lg p-8">
+            <form action="{{ route('admin.produk.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 
-                <div class="space-y-6">
+                <div class="mb-6">
+                    <label class="block text-gray-400 text-sm font-bold mb-2">Nama Produk</label>
+                    <input type="text" name="name" class="w-full bg-dark-bg border border-border-color rounded py-3 px-4 text-light-text focus:outline-none focus:border-accent-green" placeholder="Nama Produk" required>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-gray-400 text-sm font-bold mb-2">Deskripsi</label>
+                    <textarea name="description" rows="4" class="w-full bg-dark-bg border border-border-color rounded py-3 px-4 text-light-text focus:outline-none focus:border-accent-green" placeholder="Deskripsi produk..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label for="nama_produk" class="block text-sm font-medium text-light-text mb-1">Nama Produk</label>
-                        <input type="text" id="nama_produk" name="nama_produk" value="{{ old('nama_produk') }}" required class="w-full bg-dark-bg border border-border-color rounded-lg px-4 py-3 text-light-text focus:outline-none focus:ring-accent-green focus:border-accent-green">
-                        @error('nama_produk')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
+                        <label class="block text-gray-400 text-sm font-bold mb-2">Harga (Rp)</label>
+                        <input type="number" name="price" class="w-full bg-dark-bg border border-border-color rounded py-3 px-4 text-light-text focus:outline-none focus:border-accent-green" placeholder="0" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-sm font-bold mb-2">Stok</label>
+                        <input type="number" name="stock" class="w-full bg-dark-bg border border-border-color rounded py-3 px-4 text-light-text focus:outline-none focus:border-accent-green" placeholder="0" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label class="block text-gray-400 text-sm font-bold mb-2">Kategori</label>
+                        <select name="category_id" class="w-full bg-dark-bg border border-border-color rounded py-3 px-4 text-light-text focus:outline-none focus:border-accent-green" required>
+                            <option value="" disabled selected>Pilih Kategori</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     
                     <div>
-                        <label for="deskripsi" class="block text-sm font-medium text-light-text mb-1">Deskripsi</label>
-                        <textarea id="deskripsi" name="deskripsi" rows="4" required class="w-full bg-dark-bg border border-border-color rounded-lg px-4 py-3 text-light-text focus:outline-none focus:ring-accent-green focus:border-accent-green">{{ old('deskripsi') }}</textarea>
-                        @error('deskripsi')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
+                        <label class="block text-gray-400 text-sm font-bold mb-2">Gambar Produk</label>
+                        <input type="file" name="image" class="w-full bg-dark-bg border border-border-color rounded py-2 px-4 text-gray-400 focus:outline-none focus:border-accent-green">
+                        <p class="text-xs text-gray-500 mt-1">Ukuran maksimal 2MB, format: jpeg, png, jpg</p>
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="harga" class="block text-sm font-medium text-light-text mb-1">Harga (Rp)</label>
-                            <input type="number" id="harga" name="harga" value="{{ old('harga') }}" required min="0" class="w-full bg-dark-bg border border-border-color rounded-lg px-4 py-3 text-light-text focus:outline-none focus:ring-accent-green focus:border-accent-green">
-                            @error('harga')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        
-                        <div>
-                            <label for="stok" class="block text-sm font-medium text-light-text mb-1">Stok</label>
-                            <input type="number" id="stok" name="stok" value="{{ old('stok', 0) }}" required min="0" class="w-full bg-dark-bg border border-border-color rounded-lg px-4 py-3 text-light-text focus:outline-none focus:ring-accent-green focus:border-accent-green">
-                            @error('stok')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="kategori" class="block text-sm font-medium text-light-text mb-1">Kategori</label>
-                            <select id="kategori" name="kategori" required class="w-full bg-dark-bg border border-border-color rounded-lg px-4 py-3 text-light-text focus:outline-none focus:ring-accent-green focus:border-accent-green">
-                                <option value="">Pilih Kategori</option>
-                                <option value="Sepatu" {{ old('kategori') == 'Sepatu' ? 'selected' : '' }}>Sepatu</option>
-                                <option value="Pakaian" {{ old('kategori') == 'Pakaian' ? 'selected' : '' }}>Pakaian</option>
-                                <option value="Aksesoris" {{ old('kategori') == 'Aksesoris' ? 'selected' : '' }}>Aksesoris</option>
-                                <option value="Perlengkapan" {{ old('kategori') == 'Perlengkapan' ? 'selected' : '' }}>Perlengkapan</option>
-                            </select>
-                            @error('kategori')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        
-                        <div>
-                            <label for="gambar" class="block text-sm font-medium text-light-text mb-1">Gambar Produk</label>
-                            <input type="file" id="gambar" name="gambar" accept="image/*" class="w-full bg-dark-bg border border-border-color rounded-lg px-4 py-3 text-light-text focus:outline-none focus:ring-accent-green focus:border-accent-green">
-                            <p class="mt-1 text-sm text-gray-400">Ukuran maksimal 2MB, format: jpeg, png, jpg</p>
-                            @error('gambar')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-end pt-6">
-                        <button type="submit" class="bg-accent-green text-dark-bg py-3 px-6 rounded-lg font-medium hover:bg-opacity-90 transition">
-                            <i class="fas fa-save mr-2"></i>Simpan Produk
-                        </button>
-                    </div>
+                </div>
+
+                <div class="text-right">
+                    <button type="submit" class="bg-accent-green text-dark-bg font-bold py-3 px-8 rounded hover:opacity-90 transition">
+                        <i class="fas fa-save mr-2"></i> Simpan Produk
+                    </button>
                 </div>
             </form>
         </div>
