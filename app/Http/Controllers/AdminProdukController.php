@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Category; // Wajib import
+use App\Models\Category; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,7 +17,7 @@ class AdminProdukController extends Controller
 
     public function create()
     {
-        // Kirim data kategori ke form tambah produk
+        
         $categories = Category::all();
         return view('movr.admin.produk.create', compact('categories'));
     }
@@ -43,7 +43,7 @@ class AdminProdukController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'stock' => $request->stock,
-            'category_id' => $request->category_id, // Simpan ID Kategori
+            'category_id' => $request->category_id,
             'image' => $imagePath,
         ]);
 
@@ -53,7 +53,7 @@ class AdminProdukController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        $categories = Category::all(); // Kirim kategori untuk dropdown edit
+        $categories = Category::all();
         return view('movr.admin.produk.edit', compact('product', 'categories'));
     }
 
@@ -88,7 +88,7 @@ class AdminProdukController extends Controller
         if ($product->image) Storage::disk('public')->delete($product->image);
         $product->delete();
         
-        // Redirect kembali (bisa menghandle jika dihapus dari halaman kategori)
+       
         return back()->with('success', 'Produk berhasil dihapus!');
     }
 }

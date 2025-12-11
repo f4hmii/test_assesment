@@ -5,27 +5,48 @@ use App\Http\Controllers\HalamanUtamaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KeranjangController;
-use App\Http\Controllers\CheckoutController; // Pastikan ini ada
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfilPembeliController;
 use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\FavoritController;
 use App\Http\Controllers\AdminProdukController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\CustomerDashboardController;
+use App\Http\Controllers\MidtransController;
 
-// Guest Routes (Bisa diakses siapa saja
+// --- TAMBAHAN BARU: ORDER CONTROLLER ---
+use App\Http\Controllers\AdminOrderController; 
+// ---------------------------------------
+
+/*
+|--------------------------------------------------------------------------
+| Public / Guest Routes
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [HalamanUtamaController::class, 'index'])->name('home');
 Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
-// Note: Pastikan di database & controller pakai ID jika belum setup slug, 
-// tapi jika controller pakai slug, biarkan {slug}. 
-// Sesuai perbaikan home.blade.php terakhir kita pakai ID di linknya, jadi sebaiknya:
-Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show'); 
+Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
+
 // Authentication Route
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-// Authenticated Routes (Harus Login
+
+/*
+|--------------------------------------------------------------------------
+| MIDTRANS WEBHOOK
+|--------------------------------------------------------------------------
+*/
+Route::post('/midtrans/webhook', [MidtransController::class, 'handleNotification'])->name('midtrans.webhook');
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes (Harus Login)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
     
     // Keranjang routes
@@ -34,11 +55,13 @@ Route::middleware('auth')->group(function () {
     Route::put('/keranjang/{id}', [KeranjangController::class, 'update'])->name('keranjang.update');
     Route::delete('/keranjang/{id}', [KeranjangController::class, 'destroy'])->name('keranjang.destroy');
 
-    // --- CHECKOUT ROUTES (BARU DITAMBAHKAN) ---
-    // Route untuk tombol "Beli" (Direct Checkout)
+    // Checkout Routes
     Route::post('/checkout/buy-now', [CheckoutController::class, 'buyNow'])->name('checkout.buyNow');
-    // Route untuk menampilkan halaman Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+
+    // Payment status
+    Route::get('/payment/status/{orderId}', [MidtransController::class, 'paymentStatus'])->name('payment.status');
 
     // Profil routes
     Route::get('/profil', [ProfilPembeliController::class, 'index'])->name('profil.index');
@@ -57,15 +80,24 @@ Route::middleware('auth')->group(function () {
     // Favorit routes
     Route::get('/favorit', [FavoritController::class, 'index'])->name('favorit.index');
     Route::post('/favorit/toggle', [FavoritController::class, 'toggle'])->name('favorit.toggle');
-    
+
+    // Customer Dashboard routes
+    Route::get('/dashboard/pelanggan', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
+    Route::get('/dashboard/pelanggan/order/{id}', [CustomerDashboardController::class, 'show'])->name('customer.order.show');
 });
-// Admin Routes (Hanya untuk Role Admin
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes (Role: Admin)
+|--------------------------------------------------------------------------
+*/
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    
+
     // Route Dashboard
-    Route::get('/dashboard', function () {
-        return view('movr.admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Route Orders
+    Route::resource('orders', AdminOrderController::class)->except(['create', 'store']);
 
     // Route Kategori (Resource)
     Route::resource('kategori', CategoryController::class);
@@ -77,4 +109,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/produk/{id}/edit', [AdminProdukController::class, 'edit'])->name('produk.edit');
     Route::put('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
+
 });

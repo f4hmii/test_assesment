@@ -35,4 +35,10 @@ class KeranjangItem extends Model
     {
         return $this->belongsTo(Product::class, 'produk_id');
     }
+    public function product()
+    {
+        // Kita menggunakan belongsTo ke model Product.
+        // Parameter kedua 'produk_id' WAJIB ditulis karena di migrasi Anda nama kolomnya 'produk_id', bukan 'product_id'.
+        return $this->belongsTo(Product::class, 'produk_id');
+    }
 }

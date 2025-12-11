@@ -37,12 +37,26 @@ class ProdukController extends Controller
     /**
      * Menampilkan detail 1 produk
      */
+    /**
+     * Menampilkan detail 1 produk
+     */
     public function show($id)
     {
-        // Cari produk berdasarkan ID
-        $product = Product::findOrFail($id);
+        // 1. Cari produk utama (Eager load category & penjual agar hemat query)
+        $product = Product::with(['category', 'penjual'])->findOrFail($id);
 
-        // Tampilkan view detail
-        return view('movr.produk.show', compact('product'));
+        // 2. Ambil Ulasan (Pagination 5 per halaman)
+        $ulasan = $product->ulasan()->with('pembeli')->latest()->paginate(5);
+
+        // 3. TAMBAHKAN INI: Logika Produk Serupa
+        // Syarat: Kategori sama, TAPI bukan produk yang sedang dibuka
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $id) // Exclude produk ini sendiri
+            ->inRandomOrder()        // Acak urutannya
+            ->limit(3)               // Ambil 3 saja (sesuai layout grid)
+            ->get();
+
+        // 4. Kirim 'product', 'ulasan', DAN 'relatedProducts' ke view
+        return view('movr.produk.show', compact('product', 'ulasan', 'relatedProducts'));
     }
 }

@@ -13,13 +13,13 @@
             theme: {
                 extend: {
                     colors: {
-                        'dark-bg': '#313131ff',
-                        'darker-bg': '#080a0c',
-                        'light-text': '#f0f0f0',
+                        'dark-bg': '#ffffff',  // White background
+                        'darker-bg': '#f5f5f5', // Light grey background
+                        'light-text': '#000000',  // Black text
                         'accent-green': '#00bf8f',
                         'accent-blue': '#00a3ff',
-                        'card-bg': '#14171a',
-                        'border-color': '#2a2f35',
+                        'card-bg': '#ffffff',  // White card background
+                        'border-color': '#d1d5db',  // Light grey border
                     }
                 }
             }
@@ -50,9 +50,9 @@
                     <div class="flex-1 mx-8">
                         <div class="relative">
                             <input type="text" placeholder="Cari produk..."
-                                   class="w-full bg-card-bg border border-border-color rounded-full py-2 px-4 pl-10 text-white focus:outline-none focus:ring-2 focus:ring-accent-green">
+                                   class="w-full bg-white border border-gray-300 rounded-full py-2 px-4 pl-10 text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent-green">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-search text-gray-400"></i>
+                                <i class="fas fa-search text-gray-500"></i>
                             </div>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
 
                         @auth
                             <!-- Cart -->
-                            <a href="{{ route('keranjang.index') }}" class="text-light-text hover:text-accent-green transition">
+                            <a href="{{ route('keranjang.index') }}" class="text-gray-900 hover:text-accent-green transition">
                                 <i class="fas fa-shopping-cart text-xl relative">
                                     @if(auth()->user()->keranjangItems()->count() > 0)
                                         <span class="absolute -top-2 -right-2 bg-accent-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -73,35 +73,35 @@
                             </a>
 
                             <!-- Favorites -->
-                            <a href="{{ route('favorit.index') }}" class="text-light-text hover:text-accent-green transition">
+                            <a href="{{ route('favorit.index') }}" class="text-gray-900 hover:text-accent-green transition">
                                 <i class="fas fa-heart text-xl"></i>
                             </a>
 
                             <!-- Profile Dropdown -->
                             <div class="relative">
-                                <button id="userMenuBtn" class="flex items-center space-x-2 text-light-text hover:text-accent-green transition">
+                                <button id="userMenuBtn" class="flex items-center space-x-2 text-gray-900 hover:text-accent-green transition">
                                     <span class="font-medium">{{ auth()->user()->name }}</span>
                                     <i class="fas fa-chevron-down text-sm"></i>
                                 </button>
 
-                                <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-card-bg border border-border-color rounded-md shadow-lg py-1 hidden z-50">
-                                    <a href="{{ route('profil.index') }}" class="block px-4 py-2 text-sm hover:bg-dark-bg">Profil Saya</a>
-                                    <a href="{{ route('keranjang.index') }}" class="block px-4 py-2 text-sm hover:bg-dark-bg">Keranjang</a>
+                                <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg py-1 hidden z-50">
+                                    <a href="{{ route('profil.index') }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Profil Saya</a>
+                                    <a href="{{ route('keranjang.index') }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Keranjang</a>
 
                                     @if(auth()->user()->isAdmin())
-                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-dark-bg">Admin Dashboard</a>
+                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Admin Dashboard</a>
                                     @endif
 
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="w-full text-left block px-4 py-2 text-sm hover:bg-dark-bg">Logout</button>
+                                        <button type="submit" class="w-full text-left block px-4 py-2 text-sm hover:bg-gray-100">Logout</button>
                                     </form>
                                 </div>
                             </div>
 
                         @else
                             <a href="{{ route('login') }}" class="text-sm font-medium hover:text-accent-green transition">Masuk</a>
-                            <a href="{{ route('register') }}" class="ml-4 px-4 py-2 bg-accent-green text-dark-bg rounded-full text-sm font-medium hover:bg-accent-green/90 transition">Daftar</a>
+                            <a href="{{ route('register') }}" class="ml-4 px-4 py-2 bg-accent-green text-white rounded-full text-sm font-medium hover:bg-accent-green/90 transition">Daftar</a>
                         @endauth
 
                     </div>
@@ -139,13 +139,13 @@
 
             <!-- Menu -->
             <div class="flex items-center space-x-6">
-                <a href="{{ route('admin.dashboard') }}" 
-                   class="text-light-text hover:text-accent-green transition">
+                <a href="{{ route('admin.dashboard') }}"
+                   class="text-gray-900 hover:text-accent-green transition">
                     Dashboard
                 </a>
 
-                <a href="{{ route('admin.produk.index') }}" 
-                   class="text-light-text hover:text-accent-green transition">
+                <a href="{{ route('admin.produk.index') }}"
+                   class="text-gray-900 hover:text-accent-green transition">
                     Kelola Produk
                 </a>
                 <!-- ADMIN LOGOUT -->
@@ -178,39 +178,39 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
                         <h3 class="text-lg font-semibold text-accent-green mb-4">MOVR</h3>
-                        <p class="text-gray-400">E-commerce sporty terbaik dengan produk premium untuk gaya hidup aktif.</p>
+                        <p class="text-gray-600">E-commerce sporty terbaik dengan produk premium untuk gaya hidup aktif.</p>
                     </div>
 
                     <div>
-                        <h3 class="text-lg font-semibold text-light-text mb-4">Layanan</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Layanan</h3>
                         <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-400 hover:text-accent-green transition">Kebijakan Pengiriman</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-accent-green transition">Kebijakan Pengembalian</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-accent-green transition">FAQ</a></li>
+                            <li><a href="#" class="text-gray-600 hover:text-accent-green transition">Kebijakan Pengiriman</a></li>
+                            <li><a href="#" class="text-gray-600 hover:text-accent-green transition">Kebijakan Pengembalian</a></li>
+                            <li><a href="#" class="text-gray-600 hover:text-accent-green transition">FAQ</a></li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 class="text-lg font-semibold text-light-text mb-4">Tentang Kami</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Tentang Kami</h3>
                         <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-400 hover:text-accent-green transition">Tentang MOVR</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-accent-green transition">Karir</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-accent-green transition">Kontak</a></li>
+                            <li><a href="#" class="text-gray-600 hover:text-accent-green transition">Tentang MOVR</a></li>
+                            <li><a href="#" class="text-gray-600 hover:text-accent-green transition">Karir</a></li>
+                            <li><a href="#" class="text-gray-600 hover:text-accent-green transition">Kontak</a></li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 class="text-lg font-semibold text-light-text mb-4">Ikuti Kami</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Ikuti Kami</h3>
                         <div class="flex space-x-4">
-                            <a href="#" class="text-gray-400 hover:text-accent-green transition"><i class="fab fa-instagram text-xl"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-accent-green transition"><i class="fab fa-facebook text-xl"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-accent-green transition"><i class="fab fa-twitter text-xl"></i></a>
-                            <a href="#" class="text-gray-400 hover:text-accent-green transition"><i class="fab fa-youtube text-xl"></i></a>
+                            <a href="#" class="text-gray-600 hover:text-accent-green transition"><i class="fab fa-instagram text-xl"></i></a>
+                            <a href="#" class="text-gray-600 hover:text-accent-green transition"><i class="fab fa-facebook text-xl"></i></a>
+                            <a href="#" class="text-gray-600 hover:text-accent-green transition"><i class="fab fa-twitter text-xl"></i></a>
+                            <a href="#" class="text-gray-600 hover:text-accent-green transition"><i class="fab fa-youtube text-xl"></i></a>
                         </div>
                     </div>
                 </div>
 
-                <div class="border-t border-border-color mt-8 pt-8 text-center text-gray-400">
+                <div class="border-t border-border-color mt-8 pt-8 text-center text-gray-600">
                     <p>&copy; 2025 MOVR. All rights reserved.</p>
                 </div>
             </div>

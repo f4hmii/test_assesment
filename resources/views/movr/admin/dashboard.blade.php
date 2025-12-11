@@ -2,10 +2,10 @@
 
 @section('content')
 <!-- Admin Dashboard Header -->
-<section class="py-6 bg-darker-bg">
+<section class="py-6 bg-light">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-2xl font-bold text-light-text">Dashboard Admin</h1>
-        <p class="text-gray-400">Kelola produk dan pesanan Anda</p>
+        <h1 class="text-2xl font-bold text-black">Dashboard Admin</h1>
+        <p class="text-gray-600">Kelola produk dan pesanan Anda</p>
     </div>
 </section>
 
@@ -14,130 +14,121 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Total Products -->
-            <div class="bg-card-bg border border-border-color rounded-lg p-6">
+            <div class="bg-white border border-gray-300 rounded-lg p-6">
                 <div class="flex items-center">
-                    <div class="p-3 rounded-lg bg-dark-bg">
+                    <div class="p-3 rounded-lg bg-gray-100">
                         <i class="fas fa-box text-accent-green text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-400">Total Produk</p>
-                        <p class="text-2xl font-bold text-light-text">12</p>
+                        <p class="text-sm font-medium text-gray-600">Total Produk</p>
+                        <p class="text-2xl font-bold text-black">{{ $total_products }}</p>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Total Orders -->
-            <div class="bg-card-bg border border-border-color rounded-lg p-6">
+            <div class="bg-white border border-gray-300 rounded-lg p-6">
                 <div class="flex items-center">
-                    <div class="p-3 rounded-lg bg-dark-bg">
+                    <div class="p-3 rounded-lg bg-gray-100">
                         <i class="fas fa-shopping-cart text-accent-green text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-400">Total Pesanan</p>
-                        <p class="text-2xl font-bold text-light-text">24</p>
+                        <p class="text-sm font-medium text-gray-600">Total Pesanan</p>
+                        <p class="text-2xl font-bold text-black">{{ $total_orders }}</p>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Total Customers -->
-            <div class="bg-card-bg border border-border-color rounded-lg p-6">
+            <div class="bg-white border border-gray-300 rounded-lg p-6">
                 <div class="flex items-center">
-                    <div class="p-3 rounded-lg bg-dark-bg">
+                    <div class="p-3 rounded-lg bg-gray-100">
                         <i class="fas fa-users text-accent-green text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-400">Total Pelanggan</p>
-                        <p class="text-2xl font-bold text-light-text">42</p>
+                        <p class="text-sm font-medium text-gray-600">Total Pelanggan</p>
+                        <p class="text-2xl font-bold text-black">{{ $total_customers }}</p>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Revenue -->
-            <div class="bg-card-bg border border-border-color rounded-lg p-6">
+            <div class="bg-white border border-gray-300 rounded-lg p-6">
                 <div class="flex items-center">
-                    <div class="p-3 rounded-lg bg-dark-bg">
+                    <div class="p-3 rounded-lg bg-gray-100">
                         <i class="fas fa-dollar-sign text-accent-green text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-400">Pendapatan</p>
-                        <p class="text-2xl font-bold text-light-text">Rp 24.500.000</p>
+                        <p class="text-sm font-medium text-gray-600">Pendapatan</p>
+                        <p class="text-2xl font-bold text-black">Rp {{ number_format($total_revenue, 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Recent Orders -->
-            <div class="bg-card-bg border border-border-color rounded-lg p-6">
+            <div class="bg-white border border-gray-300 rounded-lg p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-bold text-light-text">Pesanan Terbaru</h2>
-                    <a href="#" class="text-accent-green text-sm hover:underline">Lihat Semua</a>
+                    <h2 class="text-lg font-bold text-black">Pesanan Terbaru</h2>
+                    <a href="{{ route('admin.orders.index') }}" class="text-accent-green text-sm hover:underline">Lihat Semua</a>
                 </div>
-                
+
                 <div class="space-y-4">
-                    <div class="flex items-center justify-between p-4 bg-dark-bg rounded-lg">
+                    @forelse($recent_orders as $order)
+                    <div class="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
                         <div>
-                            <p class="font-medium text-light-text">#ORD-001</p>
-                            <p class="text-sm text-gray-400">John Doe</p>
+                            <p class="font-medium text-black">#{{ $order->midtrans_order_id ?? $order->id }}</p>
+                            <p class="text-sm text-gray-600">{{ $order->user->name ?? 'N/A' }}</p>
                         </div>
                         <div class="text-right">
-                            <p class="font-medium text-light-text">Rp 1.200.000</p>
-                            <p class="text-sm text-yellow-500">Menunggu</p>
+                            <p class="font-medium text-black">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                            <p class="text-sm
+                                @if($order->status == 'paid') text-accent-green
+                                @elseif($order->status == 'pending') text-yellow-600
+                                @elseif($order->status == 'cancelled') text-red-500
+                                @elseif($order->status == 'processing') text-blue-600
+                                @else text-gray-600 @endif">
+                                {{ ucfirst($order->status) }}
+                            </p>
                         </div>
                     </div>
-                    
-                    <div class="flex items-center justify-between p-4 bg-dark-bg rounded-lg">
-                        <div>
-                            <p class="font-medium text-light-text">#ORD-002</p>
-                            <p class="text-sm text-gray-400">Jane Smith</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-medium text-light-text">Rp 850.000</p>
-                            <p class="text-sm text-blue-500">Diproses</p>
-                        </div>
+                    @empty
+                    <div class="text-center py-6">
+                        <p class="text-gray-600">Belum ada pesanan</p>
                     </div>
-                    
-                    <div class="flex items-center justify-between p-4 bg-dark-bg rounded-lg">
-                        <div>
-                            <p class="font-medium text-light-text">#ORD-003</p>
-                            <p class="text-sm text-gray-400">Robert Johnson</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-medium text-light-text">Rp 2.100.000</p>
-                            <p class="text-sm text-accent-green">Selesai</p>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
-            
+
             <!-- Quick Actions -->
-            <div class="bg-card-bg border border-border-color rounded-lg p-6">
-                <h2 class="text-lg font-bold text-light-text mb-6">Aksi Cepat</h2>
-                
+            <div class="bg-white border border-gray-300 rounded-lg p-6">
+                <h2 class="text-lg font-bold text-black mb-6">Aksi Cepat</h2>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <a href="{{ route('admin.produk.create') }}" class="bg-dark-bg border border-border-color rounded-lg p-6 text-center hover:bg-card-bg transition lift-effect">
+                    <a href="{{ route('admin.produk.create') }}" class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-center hover:bg-gray-200 transition lift-effect">
                         <i class="fas fa-plus-circle text-accent-green text-3xl mb-3"></i>
-                        <p class="font-medium text-light-text">Tambah Produk</p>
+                        <p class="font-medium text-black">Tambah Produk</p>
                     </a>
-                    
-                    <a href="{{ route('admin.produk.index') }}" class="bg-dark-bg border border-border-color rounded-lg p-6 text-center hover:bg-card-bg transition lift-effect">
+
+                    <a href="{{ route('admin.produk.index') }}" class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-center hover:bg-gray-200 transition lift-effect">
                         <i class="fas fa-list text-accent-green text-3xl mb-3"></i>
-                        <p class="font-medium text-light-text">Daftar Produk</p>
+                        <p class="font-medium text-black">Daftar Produk</p>
                     </a>
-            
-                    <a href="{{ route('admin.kategori.index') }}" class="bg-dark-bg border border-border-color rounded-lg p-6 text-center hover:bg-card-bg transition lift-effect">
+
+                    <a href="{{ route('admin.kategori.index') }}" class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-center hover:bg-gray-200 transition lift-effect">
                         <i class="fas fa-tags text-accent-green text-3xl mb-3"></i>
-                        <p class="font-medium text-light-text">Kelola Kategori</p>
+                        <p class="font-medium text-black">Kelola Kategori</p>
                     </a>
-                    
-                    <a href="#" class="bg-dark-bg border border-border-color rounded-lg p-6 text-center hover:bg-card-bg transition lift-effect">
+
+                    <a href="{{ route('admin.orders.index') }}" class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-center hover:bg-gray-200 transition lift-effect">
                         <i class="fas fa-file-invoice text-accent-green text-3xl mb-3"></i>
-                        <p class="font-medium text-light-text">Kelola Pesanan</p>
+                        <p class="font-medium text-black">Kelola Pesanan</p>
                     </a>
-                    
-                    <a href="#" class="bg-dark-bg border border-border-color rounded-lg p-6 text-center hover:bg-card-bg transition lift-effect">
+
+                    <a href="{{ route('admin.dashboard') }}" class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-center hover:bg-gray-200 transition lift-effect">
                         <i class="fas fa-chart-line text-accent-green text-3xl mb-3"></i>
-                        <p class="font-medium text-light-text">Laporan</p>
+                        <p class="font-medium text-black">Laporan</p>
                     </a>
                 </div>
             </div>
