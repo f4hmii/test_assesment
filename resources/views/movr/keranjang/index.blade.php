@@ -166,9 +166,10 @@
                                 </div>
                             </div>
 
-                            <button onclick="alert('Checkout integration coming soon!')" class="w-full bg-black text-white py-4 rounded-lg font-bold uppercase tracking-widest text-sm hover:bg-gray-800 transition shadow-lg shadow-gray-200 mb-4">
-                                Checkout Now
-                            </button>
+                            {{-- Pastikan nama route 'checkout.index' atau 'checkout' sudah ada di web.php Anda --}}
+<a href="{{ route('checkout.index') }}" class="block text-center w-full bg-black text-white py-4 rounded-lg font-bold uppercase tracking-widest text-sm hover:bg-gray-800 transition shadow-lg shadow-gray-200 mb-4">
+    Checkout Now
+</a>
 
                             {{-- Secure Icons --}}
                             <div class="flex justify-center gap-4 text-gray-300 text-2xl">
