@@ -27,9 +27,8 @@
                     {{-- Main Image Display --}}
                     <div class="w-full bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 mb-4 relative group">
                         @if ($product->image)
-                            <img id="main-image" src="{{ asset('storage/' . $product->image) }}" 
-                                 alt="{{ $product->name }}" 
-                                 class="w-full h-auto object-contain max-h-[600px] mix-blend-multiply mx-auto transition-transform duration-500 group-hover:scale-105 cursor-zoom-in">
+                            <img id="main-image" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                class="w-full h-auto object-contain max-h-[600px] mix-blend-multiply mx-auto transition-transform duration-500 group-hover:scale-105 cursor-zoom-in">
                         @else
                             <div class="w-full h-[500px] flex items-center justify-center text-gray-300">
                                 <i class="fas fa-image text-6xl opacity-20"></i>
@@ -37,25 +36,31 @@
                         @endif
 
                         {{-- Status Badge --}}
-                        @if($product->stock <= 0)
-                            <span class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Sold Out</span>
+                        @if ($product->stock <= 0)
+                            <span
+                                class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Sold
+                                Out</span>
                         @elseif($product->stock < 5)
-                            <span class="absolute top-4 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Low Stock</span>
+                            <span
+                                class="absolute top-4 left-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Low
+                                Stock</span>
                         @endif
                     </div>
 
                     {{-- Thumbnails --}}
                     <div class="grid grid-cols-6 gap-3">
                         {{-- Active --}}
-                        <button onclick="switchImage(this)" class="thumbnail active ring-2 ring-black ring-offset-1 rounded-lg overflow-hidden bg-gray-50 aspect-square">
+                        <button onclick="switchImage(this)"
+                            class="thumbnail active ring-2 ring-black ring-offset-1 rounded-lg overflow-hidden bg-gray-50 aspect-square">
                             <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
                         </button>
-                        
+
                         {{-- Placeholders (Simulasi jika ada banyak gambar) --}}
-                        @for($i=0; $i<3; $i++)
-                        <button class="rounded-lg overflow-hidden bg-gray-50 border border-gray-100 aspect-square flex items-center justify-center opacity-50 cursor-not-allowed">
-                            <i class="fas fa-image text-gray-300"></i>
-                        </button>
+                        @for ($i = 0; $i < 3; $i++)
+                            <button
+                                class="rounded-lg overflow-hidden bg-gray-50 border border-gray-100 aspect-square flex items-center justify-center opacity-50 cursor-not-allowed">
+                                <i class="fas fa-image text-gray-300"></i>
+                            </button>
                         @endfor
                     </div>
                 </div>
@@ -63,15 +68,17 @@
                 {{-- KOLOM KANAN: PRODUCT INFO (Sticky Sidebar) (5 Kolom) --}}
                 <div class="lg:col-span-5">
                     <div class="sticky top-8">
-                        
+
                         {{-- Header Info --}}
                         <div class="mb-6">
                             <div class="flex items-center gap-2 mb-3">
-                                <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+                                <span
+                                    class="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
                                     {{ $product->category->name ?? 'General' }}
                                 </span>
-                                @if($product->ulasan->count() > 0)
-                                    <div class="flex items-center gap-1 text-xs font-bold text-gray-900 border-l border-gray-300 pl-2">
+                                @if ($product->ulasan->count() > 0)
+                                    <div
+                                        class="flex items-center gap-1 text-xs font-bold text-gray-900 border-l border-gray-300 pl-2">
                                         <i class="fas fa-star text-yellow-400"></i>
                                         {{ number_format($product->ulasan->avg('rating'), 1) }}
                                     </div>
@@ -96,14 +103,19 @@
 
                             {{-- Quantity Selector --}}
                             <div class="mb-6">
-                                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Quantity</label>
+                                <label
+                                    class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Quantity</label>
                                 <div class="inline-flex items-center border border-gray-300 rounded-lg h-12 w-32">
-                                    <button type="button" onclick="updateQty(-1)" class="w-10 h-full flex items-center justify-center hover:bg-gray-50 transition text-gray-600 rounded-l-lg">
+                                    <button type="button" onclick="updateQty(-1)"
+                                        class="w-10 h-full flex items-center justify-center hover:bg-gray-50 transition text-gray-600 rounded-l-lg">
                                         <i class="fas fa-minus text-xs"></i>
                                     </button>
-                                    <input type="number" name="jumlah" id="qty" value="1" min="1" max="{{ $product->stock }}" 
-                                           class="w-full h-full text-center border-none focus:ring-0 font-bold text-gray-900 p-0" readonly>
-                                    <button type="button" onclick="updateQty(1)" class="w-10 h-full flex items-center justify-center hover:bg-gray-50 transition text-gray-600 rounded-r-lg">
+                                    <input type="number" name="jumlah" id="qty" value="1" min="1"
+                                        max="{{ $product->stock }}"
+                                        class="w-full h-full text-center border-none focus:ring-0 font-bold text-gray-900 p-0"
+                                        readonly>
+                                    <button type="button" onclick="updateQty(1)"
+                                        class="w-10 h-full flex items-center justify-center hover:bg-gray-50 transition text-gray-600 rounded-r-lg">
                                         <i class="fas fa-plus text-xs"></i>
                                     </button>
                                 </div>
@@ -114,12 +126,12 @@
 
                             {{-- Buttons --}}
                             <div class="flex flex-col gap-3">
-                                <button type="submit" 
+                                <button type="submit"
                                     class="w-full bg-black text-white py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-gray-800 transition shadow-xl shadow-gray-200 {{ $product->stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
                                     {{ $product->stock <= 0 ? 'disabled' : '' }}>
                                     {{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
                                 </button>
-                                
+
                                 @auth
                                     <button type="button" onclick="toggleFavorite({{ $product->id }})" id="fav-btn"
                                         class="w-full bg-white border border-gray-200 text-gray-900 py-3 rounded-xl font-bold text-sm hover:border-gray-400 transition flex items-center justify-center gap-2">
@@ -133,10 +145,12 @@
                         <div class="border rounded-xl border-gray-200 overflow-hidden">
                             {{-- Tab Headers --}}
                             <div class="flex border-b border-gray-200 bg-gray-50">
-                                <button onclick="openTab(event, 'desc')" class="tab-link flex-1 py-3 text-xs font-bold uppercase tracking-wider text-black border-b-2 border-black bg-white">
+                                <button onclick="openTab(event, 'desc')"
+                                    class="tab-link flex-1 py-3 text-xs font-bold uppercase tracking-wider text-black border-b-2 border-black bg-white">
                                     Description
                                 </button>
-                                <button onclick="openTab(event, 'reviews')" class="tab-link flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-black transition">
+                                <button onclick="openTab(event, 'reviews')"
+                                    class="tab-link flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-black transition">
                                     Reviews ({{ $product->ulasan->count() }})
                                 </button>
                             </div>
@@ -147,12 +161,14 @@
                                     <p>{{ $product->description }}</p>
                                 </div>
                                 <div class="mt-6 pt-6 border-t border-gray-100 flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-400">
+                                    <div
+                                        class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-400">
                                         <i class="fas fa-store"></i>
                                     </div>
                                     <div>
                                         <p class="text-xs text-gray-400 uppercase">Sold By</p>
-                                        <p class="text-sm font-bold text-black">{{ $product->penjual->name ?? 'Official Store' }}</p>
+                                        <p class="text-sm font-bold text-black">
+                                            {{ $product->penjual->name ?? 'Official Store' }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -166,14 +182,19 @@
                                         <div class="mb-2">
                                             <label class="text-xs font-bold text-gray-900">Rating</label>
                                             <div class="flex gap-1 mt-1">
-                                                @for($i=1; $i<=5; $i++)
-                                                    <input type="radio" id="r{{$i}}" name="rating" value="{{$i}}" class="hidden peer" required>
-                                                    <label for="r{{$i}}" class="text-gray-300 hover:text-yellow-400 peer-checked:text-yellow-400 text-lg cursor-pointer">★</label>
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <input type="radio" id="r{{ $i }}" name="rating"
+                                                        value="{{ $i }}" class="hidden peer" required>
+                                                    <label for="r{{ $i }}"
+                                                        class="text-gray-300 hover:text-yellow-400 peer-checked:text-yellow-400 text-lg cursor-pointer">★</label>
                                                 @endfor
                                             </div>
                                         </div>
-                                        <textarea name="komentar" rows="2" class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:border-black focus:ring-0" placeholder="Write your review..."></textarea>
-                                        <button class="mt-2 bg-black text-white text-xs font-bold px-4 py-2 rounded-lg">Post</button>
+                                        <textarea name="komentar" rows="2"
+                                            class="w-full border border-gray-200 rounded-lg p-2 text-sm focus:border-black focus:ring-0"
+                                            placeholder="Write your review..."></textarea>
+                                        <button
+                                            class="mt-2 bg-black text-white text-xs font-bold px-4 py-2 rounded-lg">Post</button>
                                     </form>
                                 @endauth
 
@@ -182,10 +203,13 @@
                                         <div class="border-b border-gray-100 last:border-0 pb-4 last:pb-0">
                                             <div class="flex justify-between mb-1">
                                                 <span class="font-bold text-xs">{{ $review->pembeli->name }}</span>
-                                                <span class="text-[10px] text-gray-400">{{ $review->created_at->format('d M Y') }}</span>
+                                                <span
+                                                    class="text-[10px] text-gray-400">{{ $review->created_at->format('d M Y') }}</span>
                                             </div>
                                             <div class="text-[10px] text-yellow-400 mb-1">
-                                                @for($k=0; $k<$review->rating; $k++) <i class="fas fa-star"></i> @endfor
+                                                @for ($k = 0; $k < $review->rating; $k++)
+                                                    <i class="fas fa-star"></i>
+                                                @endfor
                                             </div>
                                             <p class="text-xs text-gray-600">{{ $review->komentar }}</p>
                                         </div>
@@ -204,27 +228,34 @@
     </section>
 
     {{-- RELATED PRODUCTS (Clean Grid) --}}
-    @if($relatedProducts->count() > 0)
+    @if ($relatedProducts->count() > 0)
         <section class="bg-gray-50 py-16 border-t border-gray-200">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="flex justify-between items-end mb-8">
                     <h3 class="text-2xl font-bold text-gray-900">You Might Also Like</h3>
-                    <a href="{{ route('produk.index') }}" class="text-sm font-bold text-gray-900 hover:text-gray-600 underline decoration-gray-300 underline-offset-4">View All</a>
+                    <a href="{{ route('produk.index') }}"
+                        class="text-sm font-bold text-gray-900 hover:text-gray-600 underline decoration-gray-300 underline-offset-4">View
+                        All</a>
                 </div>
-                
+
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    @foreach($relatedProducts as $item)
-                        <a href="{{ route('produk.show', $item->id) }}" class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-gray-300 transition-all duration-300 hover:shadow-lg hover:shadow-gray-100">
+                    @foreach ($relatedProducts as $item)
+                        <a href="{{ route('produk.show', $item->id) }}"
+                            class="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-gray-300 transition-all duration-300 hover:shadow-lg hover:shadow-gray-100">
                             <div class="aspect-[4/5] bg-gray-100 overflow-hidden relative">
-                                @if($item->image)
-                                    <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500">
+                                @if ($item->image)
+                                    <img src="{{ asset('storage/' . $item->image) }}"
+                                        class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500">
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fas fa-image"></i></div>
+                                    <div class="w-full h-full flex items-center justify-center text-gray-300"><i
+                                            class="fas fa-image"></i></div>
                                 @endif
-                                
+
                                 {{-- Quick Add Button (Visible on Hover) --}}
-                                <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-300">
-                                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md text-black">
+                                <div
+                                    class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-300">
+                                    <div
+                                        class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md text-black">
                                         <i class="fas fa-plus"></i>
                                     </div>
                                 </div>
@@ -250,7 +281,7 @@
             });
             // Add active ring to clicked thumbnail
             el.classList.add('ring-2', 'ring-black', 'ring-offset-1');
-            
+
             // Change main image
             const src = el.querySelector('img').src;
             const mainImg = document.getElementById('main-image');
@@ -295,7 +326,7 @@
             currentTab.style.display = "block";
             currentTab.classList.remove('hidden');
             currentTab.classList.add('block');
-            
+
             evt.currentTarget.classList.remove("text-gray-500", "hover:text-black");
             evt.currentTarget.classList.add("border-b-2", "border-black", "text-black", "bg-white");
         }
@@ -305,16 +336,15 @@
             const btn = document.getElementById('fav-btn');
             const icon = btn.querySelector('i');
             const text = document.getElementById('fav-text');
-            const isFav = icon.classList.contains('fas'); // fas = solid (favorited)
+            const isFav = icon.classList.contains('fas');
 
+            // Update UI secara instan (Optimistic UI)
             if (!isFav) {
-                // Add
                 icon.classList.remove('far');
                 icon.classList.add('fas', 'text-red-500');
                 btn.classList.add('border-red-200', 'bg-red-50');
                 text.innerText = 'Saved';
             } else {
-                // Remove
                 icon.classList.remove('fas', 'text-red-500');
                 icon.classList.add('far');
                 btn.classList.remove('border-red-200', 'bg-red-50');
@@ -324,30 +354,41 @@
             // Backend
             fetch('{{ route('favorit.toggle') }}', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                body: JSON.stringify({ produk_id: productId })
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    produk_id: productId
+                })
             });
         }
 
         // Check on load
         document.addEventListener('DOMContentLoaded', () => {
             @auth
-                fetch('{{ route('favorit.toggle') }}', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                    body: JSON.stringify({ produk_id: {{ $product->id }}, check_only: true })
-                }).then(res => res.json()).then(data => {
-                    if(data.isFavorited) {
-                        const btn = document.getElementById('fav-btn');
-                        const icon = btn.querySelector('i');
-                        const text = document.getElementById('fav-text');
-                        icon.classList.remove('far');
-                        icon.classList.add('fas', 'text-red-500');
-                        btn.classList.add('border-red-200', 'bg-red-50');
-                        text.innerText = 'Saved';
-                    }
-                });
-            @endauth
+            fetch('{{ route('favorit.toggle') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    produk_id: {{ $product->id }},
+                    check_only: true
+                })
+            }).then(res => res.json()).then(data => {
+                if (data.isFavorited) {
+                    const btn = document.getElementById('fav-btn');
+                    const icon = btn.querySelector('i');
+                    const text = document.getElementById('fav-text');
+                    icon.classList.remove('far');
+                    icon.classList.add('fas', 'text-red-500');
+                    btn.classList.add('border-red-200', 'bg-red-50');
+                    text.innerText = 'Saved';
+                }
+            });
+        @endauth
         });
     </script>
 @endsection
