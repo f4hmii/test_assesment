@@ -96,7 +96,7 @@
                             </div>
                         </div>
 
-                        {{-- Action Form --}}
+                        {{-- Action Form (UPDATED LAYOUT) --}}
                         <form action="{{ route('keranjang.store') }}" method="POST" class="mb-8">
                             @csrf
                             <input type="hidden" name="produk_id" value="{{ $product->id }}">
@@ -124,17 +124,34 @@
                                 </span>
                             </div>
 
-                            {{-- Buttons --}}
+                            {{-- BUTTONS: GRID LAYOUT (Modern & Clean) --}}
                             <div class="flex flex-col gap-3">
-                                <button type="submit"
-                                    class="w-full bg-black text-white py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-gray-800 transition shadow-xl shadow-gray-200 {{ $product->stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
-                                    {{ $product->stock <= 0 ? 'disabled' : '' }}>
-                                    {{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
-                                </button>
+                                {{-- Row 1: Add to Cart & Buy Now --}}
+                                <div class="grid grid-cols-2 gap-3">
+                                    {{-- Tombol 1: Add to Cart (Secondary / Outline) --}}
+                                    <button type="submit" name="action" value="cart"
+                                        class="flex items-center justify-center gap-2 border-2 border-gray-200 hover:border-black text-gray-700 hover:text-black py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all duration-300 {{ $product->stock <= 0 ? 'opacity-50 cursor-not-allowed border-gray-100' : '' }}"
+                                        {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                                        <i class="fas fa-shopping-bag"></i>
+                                        <span class="hidden sm:inline">Add to Cart</span>
+                                        <span class="sm:hidden">Cart</span>
+                                    </button>
 
+                                    {{-- Tombol 2: Buy Now (Primary / Solid) --}}
+                                    <button type="submit" name="action" value="checkout"
+                                        class="flex items-center justify-center gap-2 bg-black text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-gray-800 transition shadow-xl shadow-gray-200 {{ $product->stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
+                                        {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                                        <span>{{ $product->stock > 0 ? 'Buy Now' : 'Out of Stock' }}</span>
+                                        @if ($product->stock > 0)
+                                            <i class="fas fa-arrow-right"></i>
+                                        @endif
+                                    </button>
+                                </div>
+
+                                {{-- Row 2: Wishlist (Tertiary / Text Only) --}}
                                 @auth
                                     <button type="button" onclick="toggleFavorite({{ $product->id }})" id="fav-btn"
-                                        class="w-full bg-white border border-gray-200 text-gray-900 py-3 rounded-xl font-bold text-sm hover:border-gray-400 transition flex items-center justify-center gap-2">
+                                        class="w-full bg-white text-gray-500 py-3 rounded-xl font-medium text-xs hover:text-red-500 transition flex items-center justify-center gap-2 mt-1">
                                         <i class="far fa-heart"></i> <span id="fav-text">Save to Wishlist</span>
                                     </button>
                                 @endauth
@@ -275,14 +292,11 @@
     <script>
         // 1. Image Switcher
         function switchImage(el) {
-            // Remove active ring from all thumbnails
             document.querySelectorAll('.thumbnail').forEach(btn => {
                 btn.classList.remove('ring-2', 'ring-black', 'ring-offset-1');
             });
-            // Add active ring to clicked thumbnail
             el.classList.add('ring-2', 'ring-black', 'ring-offset-1');
 
-            // Change main image
             const src = el.querySelector('img').src;
             const mainImg = document.getElementById('main-image');
             mainImg.style.opacity = 0;
@@ -303,9 +317,8 @@
             input.value = val;
         }
 
-        // 3. Tab Logic (Simple Vanilla JS)
+        // 3. Tab Logic
         function openTab(evt, tabName) {
-            // Hide all contents
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabcontent.length; i++) {
@@ -313,20 +326,15 @@
                 tabcontent[i].classList.remove('block');
                 tabcontent[i].classList.add('hidden');
             }
-
-            // Deactivate all links
             tablinks = document.getElementsByClassName("tab-link");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].classList.remove("border-black", "text-black", "bg-white");
                 tablinks[i].classList.add("text-gray-500", "hover:text-black");
             }
-
-            // Show current tab and activate button
             const currentTab = document.getElementById(tabName);
             currentTab.style.display = "block";
             currentTab.classList.remove('hidden');
             currentTab.classList.add('block');
-
             evt.currentTarget.classList.remove("text-gray-500", "hover:text-black");
             evt.currentTarget.classList.add("border-b-2", "border-black", "text-black", "bg-white");
         }
@@ -338,20 +346,20 @@
             const text = document.getElementById('fav-text');
             const isFav = icon.classList.contains('fas');
 
-            // Update UI secara instan (Optimistic UI)
+            // Optimistic UI Update
             if (!isFav) {
                 icon.classList.remove('far');
                 icon.classList.add('fas', 'text-red-500');
-                btn.classList.add('border-red-200', 'bg-red-50');
+                btn.classList.add('text-red-500');
                 text.innerText = 'Saved';
             } else {
                 icon.classList.remove('fas', 'text-red-500');
                 icon.classList.add('far');
-                btn.classList.remove('border-red-200', 'bg-red-50');
+                btn.classList.remove('text-red-500');
                 text.innerText = 'Save to Wishlist';
             }
 
-            // Backend
+            // Backend Fetch
             fetch('{{ route('favorit.toggle') }}', {
                 method: 'POST',
                 headers: {
@@ -364,31 +372,31 @@
             });
         }
 
-        // Check on load
+        // Check favorite status on load
         document.addEventListener('DOMContentLoaded', () => {
             @auth
-            fetch('{{ route('favorit.toggle') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    produk_id: {{ $product->id }},
-                    check_only: true
-                })
-            }).then(res => res.json()).then(data => {
-                if (data.isFavorited) {
-                    const btn = document.getElementById('fav-btn');
-                    const icon = btn.querySelector('i');
-                    const text = document.getElementById('fav-text');
-                    icon.classList.remove('far');
-                    icon.classList.add('fas', 'text-red-500');
-                    btn.classList.add('border-red-200', 'bg-red-50');
-                    text.innerText = 'Saved';
-                }
-            });
-        @endauth
+                fetch('{{ route('favorit.toggle') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        produk_id: {{ $product->id }},
+                        check_only: true
+                    })
+                }).then(res => res.json()).then(data => {
+                    if (data.isFavorited) {
+                        const btn = document.getElementById('fav-btn');
+                        const icon = btn.querySelector('i');
+                        const text = document.getElementById('fav-text');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-red-500');
+                        btn.classList.add('text-red-500');
+                        text.innerText = 'Saved';
+                    }
+                });
+            @endauth
         });
     </script>
 @endsection

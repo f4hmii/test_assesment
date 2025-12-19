@@ -13,7 +13,6 @@
                 </h1>
             </div>
             
-            {{-- Breadcrumb / Info Count --}}
             <div class="text-sm text-gray-500 font-medium">
                 Showing <span class="text-black font-bold">{{ $products->count() }}</span> of {{ $products->total() }} results
             </div>
@@ -35,7 +34,6 @@
                             Categories
                         </h3>
                         <ul class="space-y-3">
-                            {{-- Option: All --}}
                             <li>
                                 <a href="{{ route('produk.index') }}" 
                                    class="group flex items-center justify-between text-sm transition-all duration-200 
@@ -44,8 +42,6 @@
                                     @if(!request('kategori')) <i class="fas fa-check text-xs"></i> @endif
                                 </a>
                             </li>
-
-                            {{-- Dynamic Categories --}}
                             @foreach($categories as $cat)
                             <li>
                                 <a href="{{ route('produk.index', ['kategori' => $cat->slug]) }}" 
@@ -59,7 +55,7 @@
                         </ul>
                     </div>
 
-                    {{-- Filter Group: Sort (Visual Only - Bisa Anda fungsikan nanti) --}}
+                    {{-- Sort By --}}
                     <div>
                         <h3 class="font-heading font-bold text-black text-lg uppercase mb-4 border-b-2 border-black pb-2 inline-block">
                             Sort By
@@ -71,7 +67,7 @@
                         </select>
                     </div>
 
-                    {{-- Promo Banner Kecil di Sidebar --}}
+                    {{-- Promo Banner --}}
                     <div class="bg-black text-white p-6 rounded-xl text-center hidden lg:block">
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Member Only</p>
                         <h4 class="font-heading font-bold text-2xl uppercase mb-4">Save 20%</h4>
@@ -83,22 +79,25 @@
             {{-- 2. PRODUCT GRID --}}
             <div class="flex-1">
                 @if($products->count() > 0)
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
+                    {{-- Grid Layout --}}
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
                         @foreach($products as $item)
-                            {{-- CARD DESIGN (Sama dengan Home) --}}
-                            <div class="group flex flex-col h-full">
+                            
+                            {{-- [MODIFIED] CARD DESIGN --}}
+                            {{-- Background abu-abu (bg-gray-50), Padding (p-4), Rounded (rounded-2xl) --}}
+                            <div class="group flex flex-col h-full bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 rounded-2xl p-4 transition-all duration-300">
                                 
                                 {{-- Image Area --}}
-                                <div class="relative w-full aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden mb-4 border border-gray-100">
-                                    {{-- Wishlist --}}
+                                <div class="relative w-full aspect-[3/4] bg-white rounded-xl overflow-hidden mb-4 shadow-sm">
+                                    {{-- Wishlist Button --}}
                                     <button onclick="toggleFavorite({{ $item->id }})" id="fav-btn-{{ $item->id }}" 
-                                            class="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all">
+                                            class="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-sm text-gray-400 hover:text-red-500 hover:bg-white transition-all">
                                         <i class="far fa-heart" id="fav-icon-{{ $item->id }}"></i>
                                     </button>
 
                                     <a href="{{ route('produk.show', $item->id) }}">
                                         @if($item->image)
-                                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105">
                                         @else
                                             <div class="w-full h-full flex items-center justify-center text-gray-300">
                                                 <i class="fas fa-image text-3xl"></i>
@@ -125,13 +124,22 @@
                                             </div>
                                         </div>
 
-                                        {{-- Actions --}}
-                                        <form action="{{ route('keranjang.store') }}" method="POST">
+                                        {{-- ACTIONS SECTION --}}
+                                        <form action="{{ route('keranjang.store') }}" method="POST" class="grid grid-cols-5 gap-2">
                                             @csrf
                                             <input type="hidden" name="produk_id" value="{{ $item->id }}">
                                             <input type="hidden" name="jumlah" value="1">
-                                            <button type="submit" class="w-full py-3 px-4 rounded-lg border-2 border-black text-black font-heading font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-black hover:text-white transition-all duration-300">
-                                                Add to Cart
+                                            
+                                            {{-- Cart Button (Secondary) --}}
+                                            <button type="submit" name="action" value="cart" 
+                                                class="col-span-2 py-3 rounded-lg bg-white border border-gray-200 text-gray-600 font-heading font-bold uppercase text-[10px] sm:text-xs hover:border-black hover:text-black hover:shadow-md transition-all duration-300 flex items-center justify-center">
+                                                <i class="fas fa-shopping-cart text-sm"></i>
+                                            </button>
+
+                                            {{-- Buy Button (Primary) --}}
+                                            <button type="submit" name="action" value="checkout"
+                                                class="col-span-3 py-3 rounded-lg bg-black text-white font-heading font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-gray-800 transition-all duration-300 shadow-md shadow-gray-300 hover:shadow-lg">
+                                                Buy Now
                                             </button>
                                         </form>
                                     </div>
@@ -140,12 +148,9 @@
                         @endforeach
                     </div>
 
-                    {{-- Pagination (Custom Style) --}}
+                    {{-- Pagination --}}
                     <div class="mt-16 flex justify-center">
                         {{ $products->links() }} 
-                        {{-- Catatan: Jika ingin pagination bergaya kotak hitam putih, 
-                             Anda perlu publish vendor pagination Laravel dan edit file Tailwind-nya. 
-                             Atau biarkan default Tailwind Laravel yang sudah rapi. --}}
                     </div>
 
                 @else
@@ -155,7 +160,7 @@
                             <i class="fas fa-search text-2xl"></i>
                         </div>
                         <h3 class="text-xl font-heading font-bold text-black mb-2 uppercase">No Products Found</h3>
-                        <p class="text-gray-500 mb-6">Try adjusting your filters or check back later.</p>
+                        <p class="text-gray-500 mb-6">Try adjusting your filters.</p>
                         <a href="{{ route('produk.index') }}" class="text-sm font-bold text-black border-b border-black hover:text-accent-green hover:border-accent-green transition">
                             Clear Filters
                         </a>
@@ -166,7 +171,7 @@
     </div>
 </section>
 
-{{-- Script Favorit (Wajib ada agar tombol heart berfungsi) --}}
+{{-- Script Favorit --}}
 <script>
     function toggleFavorite(productId) {
         fetch('{{ route('favorit.toggle') }}', {
@@ -192,11 +197,11 @@
         if (isFavorited) {
             icon.classList.remove('far');
             icon.classList.add('fas', 'text-red-500');
-            btn.classList.add('bg-red-50', 'text-red-500'); 
+            btn.classList.add('text-red-500', 'bg-red-50'); 
         } else {
             icon.classList.remove('fas', 'text-red-500');
             icon.classList.add('far');
-            btn.classList.remove('bg-red-50', 'text-red-500');
+            btn.classList.remove('text-red-500', 'bg-red-50');
         }
     }
 

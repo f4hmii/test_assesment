@@ -115,81 +115,105 @@
     </div>
 </section>
 
-{{-- 4. PRODUCT SECTION (MODERNIZED & COMPACT) --}}
+{{-- 4. PRODUCT SECTION (NEW ARRIVALS - MODERN CARD STYLE) --}}
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-6">
-        <div class="flex justify-between items-end mb-10">
+        {{-- Section Header --}}
+        <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
             <div>
                 <h2 class="text-4xl font-heading font-bold text-black uppercase tracking-tight">New Arrivals</h2>
                 <p class="text-gray-500 mt-2 text-sm">Gear up with the latest innovation.</p>
             </div>
-            <a href="{{ route('produk.index') }}" class="group flex items-center gap-2 text-sm font-bold text-black hover:text-accent-green transition-all">
+            <a href="{{ route('produk.index') }}" class="group flex items-center gap-2 text-sm font-bold text-black hover:text-accent-green transition-all pb-1 border-b border-transparent hover:border-accent-green">
                 View All Products 
                 <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
             </a>
         </div>
 
         @if(isset($products) && $products->count() > 0)
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($products as $item)
-                    {{-- CARD MODERN: Compact, Action-on-Hover --}}
-                    <div class="group relative">
+                    
+                    {{-- [MODIFIED] CARD DESIGN --}}
+                    <div class="group flex flex-col h-full bg-gray-50 hover:bg-white border border-transparent hover:border-gray-100 hover:shadow-xl hover:shadow-gray-200 rounded-3xl p-4 transition-all duration-300">
                         
-                        {{-- 1. Image Wrapper --}}
-                        <div class="relative w-full aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden mb-4">
-                            
-                            {{-- Wishlist (Top Right) --}}
+                        {{-- 1. Image Area --}}
+                        <div class="relative w-full aspect-[4/5] bg-white rounded-2xl overflow-hidden mb-5 shadow-sm">
+                            {{-- Wishlist Button --}}
                             <button onclick="toggleFavorite({{ $item->id }})" id="fav-btn-{{ $item->id }}" 
-                                    class="absolute top-3 right-3 z-20 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full text-gray-400 hover:text-red-500 hover:bg-white transition-all shadow-sm">
-                                <i class="far fa-heart text-sm" id="fav-icon-{{ $item->id }}"></i>
+                                    class="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-gray-400 hover:text-red-500 hover:bg-white transition-all transform hover:scale-110">
+                                <i class="far fa-heart" id="fav-icon-{{ $item->id }}"></i>
                             </button>
 
                             <a href="{{ route('produk.show', $item->id) }}" class="block w-full h-full">
                                 @if($item->image)
-                                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" 
+                                         class="w-full h-full object-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105">
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
+                                    <div class="w-full h-full flex items-center justify-center text-gray-300">
                                         <i class="fas fa-image text-3xl"></i>
                                     </div>
                                 @endif
                             </a>
-
-                            {{-- ADD TO CART (Hidden by default, Slides up on hover) --}}
-                            <div class="absolute bottom-0 left-0 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
-                                <form action="{{ route('keranjang.store') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="produk_id" value="{{ $item->id }}">
-                                    <input type="hidden" name="jumlah" value="1">
-                                    <button type="submit" class="w-full py-4 bg-black text-white font-heading font-bold uppercase tracking-widest text-xs hover:bg-accent-green transition-colors flex items-center justify-center gap-2">
-                                        <i class="fas fa-shopping-bag"></i> Add to Cart
-                                    </button>
-                                </form>
-                            </div>
                         </div>
 
-                        {{-- 2. Detail Info (Minimalist) --}}
-                        <div class="px-1">
-                            {{-- Row 1: Title & Price --}}
-                            <div class="flex justify-between items-start gap-4 mb-1">
-                                <h3 class="text-base font-heading font-bold text-black leading-tight line-clamp-1 group-hover:text-gray-600 transition-colors">
-                                    <a href="{{ route('produk.show', $item->id) }}">{{ $item->name }}</a>
-                                </h3>
-                                <span class="text-sm font-bold text-black whitespace-nowrap">
-                                    Rp {{ number_format($item->price, 0, ',', '.') }}
+                        {{-- 2. Details Info --}}
+                        <div class="flex flex-col flex-grow">
+                            {{-- Category --}}
+                            <div class="mb-2">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-heading">
+                                    {{ $item->category ? $item->category->name : 'Sport' }}
                                 </span>
                             </div>
 
-                            {{-- Row 2: Category --}}
-                            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider font-heading">
-                                {{ $item->category ? $item->category->name : 'Sport' }}
+                            {{-- Title & Price --}}
+                            <div class="flex justify-between items-start gap-2 mb-4">
+                                <h3 class="text-sm md:text-base font-heading font-bold text-black leading-tight line-clamp-2 group-hover:text-gray-700 transition-colors">
+                                    <a href="{{ route('produk.show', $item->id) }}">{{ $item->name }}</a>
+                                </h3>
+                                <div class="text-right">
+                                    <span class="block text-sm font-bold text-black whitespace-nowrap">
+                                        Rp {{ number_format($item->price, 0, ',', '.') }}
+                                    </span>
+                                    {{-- Rating Kecil (Opsional) --}}
+                                    <div class="text-[10px] text-yellow-500 mt-1">
+                                        <i class="fas fa-star"></i> 4.9
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 3. Action Buttons (Split Style) --}}
+                            <div class="mt-auto pt-2">
+                                <form action="{{ route('keranjang.store') }}" method="POST" class="grid grid-cols-5 gap-3">
+                                    @csrf
+                                    <input type="hidden" name="produk_id" value="{{ $item->id }}">
+                                    <input type="hidden" name="jumlah" value="1">
+                                    
+                                    {{-- Tombol Cart (Putih/Outline) --}}
+                                    <button type="submit" name="action" value="cart" 
+                                        class="col-span-2 py-3 rounded-xl bg-white border border-gray-200 text-gray-600 font-heading font-bold hover:border-black hover:text-black hover:bg-gray-50 transition-all duration-300 flex items-center justify-center shadow-sm"
+                                        title="Add to Cart">
+                                        <i class="fas fa-shopping-cart text-sm"></i>
+                                    </button>
+
+                                    {{-- Tombol Buy Now (Hitam Solid) --}}
+                                    <button type="submit" name="action" value="checkout"
+                                        class="col-span-3 py-3 rounded-xl bg-black text-white font-heading font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:bg-gray-800 hover:shadow-lg hover:shadow-gray-300 transition-all duration-300 transform hover:-translate-y-0.5">
+                                        Buy Now
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
         @else
-            <div class="text-center py-20 bg-gray-50 rounded-xl border-dashed border-2 border-gray-200">
-                <p class="text-gray-500">Coming Soon.</p>
+            <div class="text-center py-24 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+                <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+                    <i class="fas fa-box-open text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900">No New Arrivals</h3>
+                <p class="text-gray-500 text-sm mt-1">Stay tuned for our latest drops.</p>
             </div>
         @endif
     </div>

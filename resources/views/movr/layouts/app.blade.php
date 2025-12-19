@@ -61,9 +61,6 @@
     {{-- ==================================================================== --}}
 
     @if(auth()->check() && auth()->user()->isAdmin())
-        {{-- ========================= --}}
-        {{-- NAVBAR ADMIN (DARK THEME) --}}
-        {{-- ========================= --}}
         <nav class="bg-dark-primary text-white sticky top-0 z-50 border-b border-gray-800 shadow-lg">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
@@ -93,9 +90,6 @@
         </nav>
 
     @else
-        {{-- ========================= --}}
-        {{-- NAVBAR USER (CLEAN/LIGHT) --}}
-        {{-- ========================= --}}
         <nav class="glass-nav sticky top-0 z-50 transition-all duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20"> <div class="flex items-center gap-12">
