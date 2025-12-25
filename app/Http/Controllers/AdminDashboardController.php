@@ -41,4 +41,34 @@ class AdminDashboardController extends Controller
 
         return view('movr.admin.dashboard', $stats);
     }
+
+    
+
+public function report()
+{
+    // Mengambil data pendapatan 6 bulan terakhir untuk grafik
+    $revenueData = Order::where('status', 'paid')
+        ->select(
+            DB::raw('SUM(total_amount) as total'),
+            DB::raw("DATE_FORMAT(created_at, '%M') as month"),
+            DB::raw('MAX(created_at) as sort_date')
+        )
+        ->groupBy('month')
+        ->orderBy('sort_date', 'asc')
+        ->get();
+
+    // Mengambil detail transaksi terbaru
+    $incomeRecords = Order::with('user')
+        ->where('status', 'paid')
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+
+    $totalRevenue = Order::where('status', 'paid')->sum('total_amount');
+
+    return view('movr.admin.report', [
+        'revenueData' => $revenueData,
+        'incomeRecords' => $incomeRecords,
+        'totalRevenue' => $totalRevenue
+    ]);
+}
 }

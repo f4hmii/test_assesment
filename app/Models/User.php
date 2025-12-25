@@ -2,19 +2,23 @@
 
 namespace App\Models;
 
+// TAMBAHKAN INI
+use Laravel\Sanctum\HasApiTokens; 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    // TAMBAHKAN 'HasApiTokens' DI SINI
+    use HasApiTokens, HasFactory, Notifiable; 
 
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role', // kalau kamu pakai role di user
+        'role',
     ];
 
     protected $hidden = [
@@ -30,30 +34,9 @@ class User extends Authenticatable
         ];
     }
 
-    // ===========================
-    // 🔥 RELASI YANG DIBUTUHKAN
-    // ===========================
-
-    // Relasi ke item keranjang
-    public function keranjangItems()
-    {
-        return $this->hasMany(\App\Models\KeranjangItem::class, 'id');
-    }
-
-    // Relasi ke ulasan
-    public function ulasan()
-    {
-        return $this->hasMany(\App\Models\Ulasan::class, 'user_id');
-    }
-
-    // Relasi ke produk favorit
-    public function favorit()
-    {
-        return $this->hasMany(\App\Models\Favorit::class, 'id');
-    }
-
-    public function isAdmin()
-{
-    return $this->role === 'admin';
-}
+    // ... sisa relasi Anda biarkan saja ...
+    public function keranjangItems() { return $this->hasMany(\App\Models\KeranjangItem::class, 'id'); }
+    public function ulasan() { return $this->hasMany(\App\Models\Ulasan::class, 'user_id'); }
+    public function favorit() { return $this->hasMany(\App\Models\Favorit::class, 'id'); }
+    public function isAdmin() { return $this->role === 'admin'; }
 }

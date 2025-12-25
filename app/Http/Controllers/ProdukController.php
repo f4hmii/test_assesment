@@ -24,14 +24,41 @@ class ProdukController extends Controller
             });
         }
 
+        // Fitur Search: cari berdasarkan nama atau deskripsi
+        if ($request->has('search') && trim($request->search) != '') {
+            $term = trim($request->search);
+            $query->where(function($q) use ($term) {
+                $q->where('name', 'like', "%{$term}%")
+                  ->orWhere('description', 'like', "%{$term}%");
+            });
+        }
+
+        // Sort options (opsional)
+        if ($request->has('sort') && $request->sort != '') {
+            switch ($request->sort) {
+                case 'price_low':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_high':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'newest':
+                default:
+                    $query->latest();
+                    break;
+            }
+        }
+
         // Ambil data dengan pagination (9 produk per halaman)
-        // Kita namakan variabelnya '$products' (Inggris)
-        $products = $query->latest()->paginate(9);
+        $products = $query->paginate(9)->withQueryString();
 
         // Ambil semua kategori untuk sidebar filter
         $categories = Category::all();
 
-        return view('movr.produk.index', compact('products', 'categories'));
+        // Kirim juga nilai pencarian agar form menampilkan kembali kata pencarian
+        $search = $request->search ?? null;
+
+        return view('movr.produk.index', compact('products', 'categories', 'search'));
     }
 
     /**

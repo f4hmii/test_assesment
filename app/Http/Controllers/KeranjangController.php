@@ -37,6 +37,23 @@ class KeranjangController extends Controller
             return redirect()->back()->with('error', 'Stok tidak mencukupi!');
         }
 
+        // Jika user menekan tombol 'Buy Now' (action=checkout), lewati redirect ke keranjang
+        if ($request->input('action') === 'checkout') {
+            $checkoutItem = [
+                'id' => $produk->id,
+                'name' => $produk->name,
+                'price' => $produk->price,
+                'image' => $produk->image,
+                'qty' => (int) $request->jumlah,
+                'total' => $produk->price * (int) $request->jumlah,
+            ];
+
+            session(['checkout_type' => 'direct']);
+            session(['checkout_items' => [$checkoutItem]]);
+
+            return redirect()->route('checkout.index');
+        }
+
         $existingItem = KeranjangItem::where('pembeli_id', Auth::id())
                         ->where('produk_id', $request->produk_id)
                         ->first();

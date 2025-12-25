@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response; // <--- PENTING: Untuk bikin respon gambar
+use Illuminate\Support\Facades\File;     // <--- PENTING: Untuk baca file dari folder
+
 use App\Http\Controllers\HalamanUtamaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProdukController;
@@ -14,10 +17,36 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\CustomerDashboardController;
 use App\Http\Controllers\MidtransController;
-
-// --- TAMBAHAN BARU: ORDER CONTROLLER ---
 use App\Http\Controllers\AdminOrderController; 
-// ---------------------------------------
+
+/*
+|--------------------------------------------------------------------------
+| SOLUSI GAMBAR FLUTTER (ULTIMATE FIX)
+|--------------------------------------------------------------------------
+*/
+Route::get('/image-proxy/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+
+    if (!File::exists($filePath)) {
+        $altPath = storage_path('app/public/products/' . $path);
+        if (File::exists($altPath)) {
+            $filePath = $altPath;
+        } else {
+            return Response::json(['message' => 'Image not found'], 404)
+                ->header("Access-Control-Allow-Origin", "*");
+        }
+    }
+
+    $file = File::get($filePath);
+    $type = File::mimeType($filePath);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    $response->header("Access-Control-Allow-Origin", "*"); 
+    $response->header("Access-Control-Allow-Methods", "GET, OPTIONS");
+
+    return $response;
+})->where('path', '.*');
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +125,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     // Route Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+    // Route Laporan Pendapatan (TAMBAHAN DISINI)
+    Route::get('/laporan', [AdminDashboardController::class, 'report'])->name('report');
+
     // Route Orders
     Route::resource('orders', AdminOrderController::class)->except(['create', 'store']);
 
@@ -109,5 +141,4 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/produk/{id}/edit', [AdminProdukController::class, 'edit'])->name('produk.edit');
     Route::put('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
-
 });

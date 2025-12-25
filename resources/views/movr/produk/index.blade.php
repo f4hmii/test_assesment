@@ -13,8 +13,19 @@
                 </h1>
             </div>
             
-            <div class="text-sm text-gray-500 font-medium">
-                Showing <span class="text-black font-bold">{{ $products->count() }}</span> of {{ $products->total() }} results
+            <div class="flex items-center gap-4">
+                <form action="{{ route('produk.index') }}" method="GET" class="flex items-center">
+                    @if(request('kategori'))
+                        <input type="hidden" name="kategori" value="{{ request('kategori') }}">
+                    @endif
+                    <input type="search" name="search" value="{{ old('search', $search) }}" placeholder="Search products..."
+                        class="w-64 md:w-80 border border-gray-200 rounded-lg p-2 text-sm focus:border-black focus:ring-0" />
+                    <button type="submit" class="ml-2 px-3 py-2 bg-black text-white rounded-lg text-sm">Search</button>
+                </form>
+
+                <div class="text-sm text-gray-500 font-medium">
+                    Showing <span class="text-black font-bold">{{ $products->count() }}</span> of {{ $products->total() }} results
+                </div>
             </div>
         </div>
     </div>

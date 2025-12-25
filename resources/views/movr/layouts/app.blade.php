@@ -104,18 +104,20 @@
                             <a href="{{ route('produk.index') }}" class="text-sm font-bold uppercase tracking-widest hover:text-accent-green transition-colors {{ request()->routeIs('produk.*') ? 'text-accent-green' : 'text-gray-900' }}">
                                 Shop
                             </a>
-                            <a href="#" class="text-sm font-bold uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors">
-                                Collections
-                            </a>
                         </div>
                     </div>
 
                     <div class="flex items-center space-x-6">
-                        <div class="hidden lg:block relative group">
-                            <input type="text" placeholder="Search..." 
-                                   class="bg-gray-100 border-none rounded-full py-2 px-4 pl-10 text-sm w-48 transition-all duration-300 focus:w-64 focus:ring-1 focus:ring-accent-green focus:bg-white placeholder-gray-400 text-gray-900">
-                            <i class="fas fa-search absolute left-3.5 top-3 text-gray-400"></i>
-                        </div>
+                        <form action="{{ route('produk.index') }}" method="GET" class="hidden lg:block relative group">
+                            @if(request('kategori'))
+                                <input type="hidden" name="kategori" value="{{ request('kategori') }}">
+                            @endif
+                            <input type="search" name="search" value="{{ request('search') }}" placeholder="Search..."
+                                class="bg-gray-100 border-none rounded-full py-2 px-4 pl-10 pr-12 text-sm w-48 transition-all duration-300 focus:w-64 focus:ring-1 focus:ring-accent-green focus:bg-white placeholder-gray-400 text-gray-900">
+                            <button type="submit" class="absolute right-3 top-1.5 text-gray-500 hover:text-gray-800 w-8 h-8 flex items-center justify-center">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
 
                         @auth
                             <a href="{{ route('favorit.index') }}" class="relative text-gray-900 hover:text-accent-green transition">

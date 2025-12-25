@@ -29,7 +29,7 @@ class AdminProdukController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
-            'category_id' => 'required|exists:categories,id', // Validasi kategori
+            'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -45,6 +45,9 @@ class AdminProdukController extends Controller
             'stock' => $request->stock,
             'category_id' => $request->category_id,
             'image' => $imagePath,
+            
+            // --- PERBAIKAN: Menambahkan ID user yang sedang login ---
+            'user_id' => auth()->id(), 
         ]);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan!');

@@ -126,10 +126,10 @@
                         <p class="font-medium text-black">Kelola Pesanan</p>
                     </a>
 
-                    <a href="{{ route('admin.dashboard') }}" class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-center hover:bg-gray-200 transition lift-effect">
-                        <i class="fas fa-chart-line text-accent-green text-3xl mb-3"></i>
-                        <p class="font-medium text-black">Laporan</p>
-                    </a>
+                    <a href="{{ route('admin.report') }}" class="bg-gray-100 border border-gray-300 rounded-lg p-6 text-center hover:bg-gray-200 transition lift-effect">
+    <i class="fas fa-chart-line text-accent-green text-3xl mb-3"></i>
+    <p class="font-medium text-black">Laporan</p>
+</a>
                 </div>
             </div>
         </div>
