@@ -38,7 +38,9 @@ class KeranjangController extends Controller
         ], 200);
     }
 
-    // POST: Tambah ke keranjang
+    /**
+     * Tambah item ke keranjang
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -52,12 +54,12 @@ class KeranjangController extends Controller
 
         $produk = Product::find($request->produk_id);
         
-        // Cek Stok
+        // Cek ketersediaan stok produk
         if ($produk->stock < $request->jumlah) {
             return response()->json(['message' => 'Stok tidak mencukupi'], 400);
         }
 
-        // Cek apakah item sudah ada
+        // Cek apakah item sudah ada di keranjang
         $existingItem = KeranjangItem::where('pembeli_id', Auth::id())
             ->where('produk_id', $request->produk_id)
             ->first();
@@ -80,7 +82,9 @@ class KeranjangController extends Controller
         ], 201);
     }
 
-    // PUT: Update jumlah item
+    /**
+     * Update jumlah item keranjang
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -110,7 +114,9 @@ class KeranjangController extends Controller
         ]);
     }
 
-    // DELETE: Hapus item
+    /**
+     * Hapus item dari keranjang
+     */
     public function destroy($id)
     {
         $keranjangItem = KeranjangItem::where('id', $id)

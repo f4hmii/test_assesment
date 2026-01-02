@@ -45,8 +45,6 @@ class AdminProdukController extends Controller
             'stock' => $request->stock,
             'category_id' => $request->category_id,
             'image' => $imagePath,
-            
-            // --- PERBAIKAN: Menambahkan ID user yang sedang login ---
             'user_id' => auth()->id(), 
         ]);
 

@@ -9,20 +9,26 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    // 1. Menampilkan Daftar Kategori
+    /**
+     * Tampilkan daftar kategori
+     */
     public function index()
     {
-        $categories = Category::withCount('products')->get(); // Mengambil jumlah produk juga
+        $categories = Category::withCount('products')->get();
         return view('movr.admin.categories.index', compact('categories'));
     }
 
-    // 2. Form Tambah Kategori
+    /**
+     * Tampilkan form untuk membuat kategori baru
+     */
     public function create()
     {
         return view('movr.admin.categories.create');
     }
 
-    // 3. Simpan Kategori Baru
+    /**
+     * Simpan kategori baru
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -37,13 +43,17 @@ class CategoryController extends Controller
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil dibuat!');
     }
 
-    // 4. Form Edit Kategori
+    /**
+     * Tampilkan form untuk edit kategori
+     */
     public function edit(Category $kategori)
     {
         return view('movr.admin.categories.edit', compact('kategori'));
     }
 
-    // 5. Update Kategori
+    /**
+     * Update kategori
+     */
     public function update(Request $request, Category $kategori)
     {
         $request->validate([
@@ -58,17 +68,20 @@ class CategoryController extends Controller
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
-    // 6. Hapus Kategori
+    /**
+     * Hapus kategori
+     */
     public function destroy(Category $kategori)
     {
         $kategori->delete();
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori dihapus!');
     }
 
-    // 7. LIHAT DETAIL (Fitur yang Anda minta: Lihat produk dalam kategori)
+    /**
+     * Tampilkan detail kategori beserta produk
+     */
     public function show(Category $kategori)
     {
-        // Ambil produk yang ada di kategori ini
         $products = $kategori->products; 
         return view('movr.admin.categories.show', compact('kategori', 'products'));
     }

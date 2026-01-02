@@ -12,19 +12,12 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-        // Count total products
         $totalProducts = Product::count();
-
-        // Count total orders
         $totalOrders = Order::count();
-
-        // Count total customers
         $totalCustomers = User::where('role', '!=', 'admin')->count();
-
-        // Calculate total revenue from paid orders
         $totalRevenue = Order::where('status', 'paid')->sum('total_amount');
 
-        // Get recent orders (last 5 orders)
+        // Ambil pesanan terbaru (5 terakhir)
         $recentOrders = Order::with('user')
             ->orderBy('created_at', 'desc')
             ->limit(5)
@@ -46,7 +39,7 @@ class AdminDashboardController extends Controller
 
 public function report()
 {
-    // Mengambil data pendapatan 6 bulan terakhir untuk grafik
+    // Ambil data pendapatan 6 bulan terakhir untuk grafik
     $revenueData = Order::where('status', 'paid')
         ->select(
             DB::raw('SUM(total_amount) as total'),
@@ -57,7 +50,7 @@ public function report()
         ->orderBy('sort_date', 'asc')
         ->get();
 
-    // Mengambil detail transaksi terbaru
+    // Ambil detail transaksi terbaru
     $incomeRecords = Order::with('user')
         ->where('status', 'paid')
         ->orderBy('created_at', 'desc')

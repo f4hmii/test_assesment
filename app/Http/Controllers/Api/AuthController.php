@@ -11,7 +11,9 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // 1. REGISTER (Untuk Pembeli Baru)
+    /**
+     * Registrasi pengguna baru
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -28,10 +30,10 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'pembeli', // Default register pasti pembeli
+            'role' => 'pembeli',
         ]);
 
-        // Buat token agar user langsung login setelah register
+        // Buat token untuk auto-login setelah registrasi
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -42,7 +44,9 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // 2. LOGIN
+    /**
+     * Login pengguna
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
